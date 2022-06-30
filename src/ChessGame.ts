@@ -176,7 +176,7 @@ export class Game {
 
     public static printBoard(board: Piece[]) {
         for(const piece of board) {
-            console.log(piece.)
+            console.log(piece)
         }
     }
 }
