@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["es2015","DOM"],
+    "lib": ["es2015"],
     "module": "commonjs",
     "outDir": "./build",
     "sourceMap": true,
