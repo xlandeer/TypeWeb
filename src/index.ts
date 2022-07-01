@@ -1,7 +1,7 @@
 class ListNode {
   private parent
   private nodeWrapper
-  
+
   constructor(
     private text: string,
   ) {
@@ -15,12 +15,14 @@ class ListNode {
     node.textContent = text
     node.className = 'node'
     tick.className = 'tick'
-    appendElement(this.nodeWrapper, tick,node)
-    if(this.parent){
-      appendElement(this.parent,this.nodeWrapper)
+    deleteBtn.className = 'delete-btn'
+    appendElement(this.nodeWrapper, tick, node, deleteBtn)
+    if (this.parent) {
+      appendElement(this.parent, this.nodeWrapper)
     }
+    deleteBtn.addEventListener('click', () => this.delete(this.nodeWrapper))
   }
-  
+  ///TODO: addElement function (Overloads)
   private addElements(...elementNames: string[]) {
     let ret: Element[] = [];
     for (const elementName of elementNames) {
@@ -29,14 +31,14 @@ class ListNode {
     return ret;
   }
 
-  private delete() {
-
+  private delete(nodeWrapper: Element) {
+    nodeWrapper.remove();
   }
-  
-  
+
+
 }
 
-function appendElement(parent: Element,...nodes: Element[]) {
+function appendElement(parent: Element, ...nodes: Element[]) {
   for (const node of nodes) {
     parent.appendChild(node);
   }

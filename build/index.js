@@ -12,11 +12,14 @@ class ListNode {
         node.textContent = text;
         node.className = 'node';
         tick.className = 'tick';
-        appendElement(this.nodeWrapper, tick, node);
+        deleteBtn.className = 'delete-btn';
+        appendElement(this.nodeWrapper, tick, node, deleteBtn);
         if (this.parent) {
             appendElement(this.parent, this.nodeWrapper);
         }
+        deleteBtn.addEventListener('click', () => this.delete(this.nodeWrapper));
     }
+    ///TODO: addElement function (Overloads)
     addElements(...elementNames) {
         let ret = [];
         for (const elementName of elementNames) {
@@ -24,7 +27,8 @@ class ListNode {
         }
         return ret;
     }
-    delete() {
+    delete(nodeWrapper) {
+        nodeWrapper.remove();
     }
 }
 function appendElement(parent, ...nodes) {

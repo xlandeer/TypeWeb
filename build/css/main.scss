@@ -41,14 +41,29 @@ body {
 			}
 
 			.checklist-inner {
-				.nodeWrapper {
-					display: flex;
+				.node-wrapper {
+					display: grid;
+					grid-template-columns: 20px 10fr 1fr;
+					gap: 1rem;
+					place-items: center;
+					margin: 1rem 0;
+					.tick {
+						aspect-ratio: 1;
+					}
 					.node {
+						width: 100%;
+						height: 100%;
 						background-color: $primeColor;
 						color: $bgColor;
 						padding: 1rem;
 						border-radius: 20px;
 					}
+					.delete-btn {
+						width: 100%;
+						height: 100%;
+						background-color: $primeColor;
+					}
+					
 				}
 			}
 		}
