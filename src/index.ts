@@ -1,18 +1,46 @@
 class ListNode {
-  parent
-  node
+  private parent
+  private nodeWrapper
+  
   constructor(
-    private text: string
+    private text: string,
   ) {
     this.parent = document.querySelector(".checklist-inner")
-    this.node = document.createElement("div")
-    this.node.textContent = text
-    this.node.className = 'node'
-    this.parent?.appendChild(this.node)
+    this.nodeWrapper = document.createElement("div")
+    this.nodeWrapper.className = 'node-wrapper'
+    let deleteBtn = document.createElement("div")
+    let node = document.createElement("div")
+    let tick = document.createElement("input")
+    tick.type = 'checkbox'
+    node.textContent = text
+    node.className = 'node'
+    tick.className = 'tick'
+    appendElement(this.nodeWrapper, tick,node)
+    if(this.parent){
+      appendElement(this.parent,this.nodeWrapper)
+    }
   }
+  
+  private addElements(...elementNames: string[]) {
+    let ret: Element[] = [];
+    for (const elementName of elementNames) {
+      ret.push(document.createElement(elementName));
+    }
+    return ret;
+  }
+
+  private delete() {
+
+  }
+  
+  
 }
 
-
+function appendElement(parent: Element,...nodes: Element[]) {
+  for (const node of nodes) {
+    parent.appendChild(node);
+  }
+}
 let addBtn = document.querySelector('.add-btn')
 addBtn?.addEventListener('click', () => {
   const input = document.querySelector('.checklist .checklist-controls input') as HTMLInputElement | null
@@ -20,3 +48,10 @@ addBtn?.addEventListener('click', () => {
     let node = new ListNode(input.value)
   }
 })
+
+/*
+<div class="node">
+  <div class="check">haken</div>
+  <div class="node-text">Text</div>
+</div>
+*/

@@ -1,13 +1,35 @@
 "use strict";
 class ListNode {
     constructor(text) {
-        var _a;
         this.text = text;
         this.parent = document.querySelector(".checklist-inner");
-        this.node = document.createElement("div");
-        this.node.textContent = text;
-        this.node.className = 'node';
-        (_a = this.parent) === null || _a === void 0 ? void 0 : _a.appendChild(this.node);
+        this.nodeWrapper = document.createElement("div");
+        this.nodeWrapper.className = 'node-wrapper';
+        let deleteBtn = document.createElement("div");
+        let node = document.createElement("div");
+        let tick = document.createElement("input");
+        tick.type = 'checkbox';
+        node.textContent = text;
+        node.className = 'node';
+        tick.className = 'tick';
+        appendElement(this.nodeWrapper, tick, node);
+        if (this.parent) {
+            appendElement(this.parent, this.nodeWrapper);
+        }
+    }
+    addElements(...elementNames) {
+        let ret = [];
+        for (const elementName of elementNames) {
+            ret.push(document.createElement(elementName));
+        }
+        return ret;
+    }
+    delete() {
+    }
+}
+function appendElement(parent, ...nodes) {
+    for (const node of nodes) {
+        parent.appendChild(node);
     }
 }
 let addBtn = document.querySelector('.add-btn');
@@ -17,4 +39,10 @@ addBtn === null || addBtn === void 0 ? void 0 : addBtn.addEventListener('click',
         let node = new ListNode(input.value);
     }
 });
+/*
+<div class="node">
+  <div class="check">haken</div>
+  <div class="node-text">Text</div>
+</div>
+*/ 
 //# sourceMappingURL=index.js.map
