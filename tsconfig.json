@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["es2015"],
+    "lib": ["es2015","DOM"],
     "module": "commonjs",
     "outDir": "./build",
     "sourceMap": true,
@@ -9,5 +9,5 @@
   },
   "include": [
     "src"
-  ]
+, "build/index.ts"  ]
 }
