@@ -23,6 +23,7 @@ class ListNode {
     deleteBtn.addEventListener('click', () => this.delete(this.nodeWrapper))
   }
   ///TODO: addElement function (Overloads)
+  // Backend Save function of Data
   private addElements(...elementNames: string[]) {
     let ret: Element[] = [];
     for (const elementName of elementNames) {
