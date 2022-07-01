@@ -41,6 +41,7 @@ addBtn === null || addBtn === void 0 ? void 0 : addBtn.addEventListener('click',
     const input = document.querySelector('.checklist .checklist-controls input');
     if (input === null || input === void 0 ? void 0 : input.value) {
         let node = new ListNode(input.value);
+        input.value = '';
     }
 });
 /*

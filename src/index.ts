@@ -48,12 +48,6 @@ addBtn?.addEventListener('click', () => {
   const input = document.querySelector('.checklist .checklist-controls input') as HTMLInputElement | null
   if (input?.value) {
     let node = new ListNode(input.value)
+    input.value = ''
   }
 })
-
-/*
-<div class="node">
-  <div class="check">haken</div>
-  <div class="node-text">Text</div>
-</div>
-*/
