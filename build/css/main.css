@@ -12,10 +12,21 @@ body main .checklist .checklist-wrapper .checklist-controls .add-btn {
   border: 1px solid #fff;
   border-radius: 20px;
   padding: 0.5rem 1.2rem;
-  transition: color 0.5s ease-in-out, border 0.5s ease-in-out;
+  transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
 }
 body main .checklist .checklist-wrapper .checklist-controls .add-btn:hover {
   color: #2596be;
+  border-color: #2596be;
+}
+body main .checklist .checklist-wrapper .checklist-controls input {
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  transition: border 0.3s ease-in-out;
+}
+body main .checklist .checklist-wrapper .checklist-controls input:hover {
   border-color: #2596be;
 }
 body main .checklist .checklist-wrapper .checklist-inner .node {

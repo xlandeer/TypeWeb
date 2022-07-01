@@ -11,15 +11,26 @@ body{
 
 		.checklist .checklist-wrapper {
 			.checklist-controls {
-				.add-btn {
+				.add-btn{
 					color: $primeColor;
 					background-color: transparent;
 					border: 1px solid $primeColor;
 					border-radius: 20px;
 					padding: 0.5rem 1.2rem;
-					transition: color 0.5s ease-in-out, border 0.5s ease-in-out;
+					transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
 					&:hover {
 						color: $scondaryColor;
+						border-color: $scondaryColor;
+					}
+				}
+				input {
+					color: $primeColor;
+					background-color: transparent;
+					border: 1px solid $primeColor;
+					border-radius: 20px;
+					padding: 0.5rem 1.2rem;
+					transition: border 0.3s ease-in-out;
+					&:hover {
 						border-color: $scondaryColor;
 					}
 				}
