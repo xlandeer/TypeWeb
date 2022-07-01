@@ -29,7 +29,10 @@ body main .checklist .checklist-wrapper .checklist-controls input {
 body main .checklist .checklist-wrapper .checklist-controls input:hover {
   border-color: #2596be;
 }
-body main .checklist .checklist-wrapper .checklist-inner .node {
+body main .checklist .checklist-wrapper .checklist-inner .nodeWrapper {
+  display: flex;
+}
+body main .checklist .checklist-wrapper .checklist-inner .nodeWrapper .node {
   background-color: #fff;
   color: #171717;
   padding: 1rem;

@@ -41,13 +41,17 @@ body {
 			}
 
 			.checklist-inner {
-				.node {
-					background-color: $primeColor;
-					color: $bgColor;
-					padding: 1rem;
-					border-radius: 20px;
+				.nodeWrapper {
+					display: flex;
+					.node {
+						background-color: $primeColor;
+						color: $bgColor;
+						padding: 1rem;
+						border-radius: 20px;
+					}
 				}
 			}
 		}
 	}
 }
+
