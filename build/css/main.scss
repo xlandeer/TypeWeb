@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+$bgColor: #171717;
+$primeColor: #fff;
+$scondaryColor: #2596be;
+
+body{
+	background-color: $bgColor;
+	main {
+		font-family: "Poppins";
+		color: $primeColor;
+
+		.checklist .checklist-wrapper {
+			.checklist-controls {
+				.add-btn {
+					color: $primeColor;
+					background-color: transparent;
+					border: 1px solid $primeColor;
+					border-radius: 20px;
+					padding: 0.5rem 1.2rem;
+					transition: color 0.5s ease-in-out,
+					border 0.5s ease-in-out;
+					&:is(:hover, :active, :focus) {
+						color: $scondaryColor;
+						border-color: $scondaryColor;
+					}
+				}
+			}
+		}
+		
+		// .headline{
+		// 	color: $primeColor;
+		// }
+	}
+}

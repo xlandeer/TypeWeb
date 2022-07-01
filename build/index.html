@@ -3,18 +3,28 @@
 <head>
   <title>TypeWeb</title>
   <script src="index.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <p id="para1">Irgendein Text</p>
-  <button onclick="changeColor('blue');">Blau</button>
-  <button onclick="changeColor('red');">Rot</button>
 
-  <div class="navbar">
-    <ul class="navList">
-      <li><a href="#" class="home">Home</a></li>
-      
-    </ul>
-  </div>
+  <main>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12 checklist">
+          <div class="checklist-wrapper">
+            <h1 class="headline">Checklist</h1>
+            <div class="checklist-controls col-12">
+              <button class="add-btn">Add task</button>
+            </div>
+            <div class="checklist-inner col-12">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
 </body>
 </html>

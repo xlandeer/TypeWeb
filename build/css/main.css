@@ -1,11 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-body{
-    background: #9e9292;
-    margin: 0;
-    font-family: 'Poppins';    
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
+body {
+  background-color: #171717;
 }
-
-.navbar {
-    background: #FFFFFF;
-    
+body main {
+  font-family: "Poppins";
+  color: #fff;
 }
+body main .checklist .checklist-wrapper .checklist-controls .add-btn {
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  transition: color 0.5s ease-in-out, border 0.5s ease-in-out;
+}
+body main .checklist .checklist-wrapper .checklist-controls .add-btn:is(:hover, :active, :focus) {
+  color: #2596be;
+  border-color: #2596be;
+}/*# sourceMappingURL=main.css.map */
