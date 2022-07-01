@@ -14,7 +14,13 @@ body main .checklist .checklist-wrapper .checklist-controls .add-btn {
   padding: 0.5rem 1.2rem;
   transition: color 0.5s ease-in-out, border 0.5s ease-in-out;
 }
-body main .checklist .checklist-wrapper .checklist-controls .add-btn:is(:hover, :active, :focus) {
+body main .checklist .checklist-wrapper .checklist-controls .add-btn:hover {
   color: #2596be;
   border-color: #2596be;
+}
+body main .checklist .checklist-wrapper .checklist-inner .node {
+  background-color: #fff;
+  color: #171717;
+  padding: 1rem;
+  border-radius: 20px;
 }/*# sourceMappingURL=main.css.map */
