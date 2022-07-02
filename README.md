@@ -4,9 +4,9 @@ Partly learned from:
 "Programming TypeScript by Boris Cherny (O’Reilly). Copyright 2019 Boris Cherny, 978-1-492-03765-1.”
 
 * Project Ideas:
-  * Chess-Engine(Already begun)
-  * Small scoped browser Game
-  * Sample programs, e.g.: Checklist, Calender
+  - [] Chess-Engine(Already begun)
+  - [] Small scoped browser Game
+  - [x] Sample programs, e.g.: Checklist, Calender 
 ## Setup ##
 ```sh
 $ npm init
