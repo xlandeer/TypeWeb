@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["es2015","DOM"],
-    "module": "commonjs",
+    "lib": ["es6","DOM"],
+    //"module": "commonjs",
     "outDir": "./build",
     "sourceMap": true,
     "strict": true,
-    "target": "es2015"
+    "target": "es6"
   },
   "include": [
-    "src"
-, "build/index.ts"  ]
+    "src"]
 }
