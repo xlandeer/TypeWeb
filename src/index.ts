@@ -1,6 +1,8 @@
 class ListNode {
   private parent;
   private nodeWrapper;
+  private ticked = false;
+
 
   constructor(private text: string) {
     this.parent = document.querySelector(".checklist-inner");
@@ -16,9 +18,6 @@ class ListNode {
     if (this.parent) {
       ListNode.appendElements(this.parent, this.nodeWrapper);
     }
-    nodeElements.deleteBtn.addEventListener("click", () =>
-      this.nodeWrapper.remove()
-    );
   }
 
   private createNodeElements() {
@@ -26,10 +25,19 @@ class ListNode {
     let node = this.addElement("div", ["class", "node"]);
     let deleteBtn = this.addElement("input", ["class", "delete-btn"], ["type", "image"], ["src", "icons/x_btn.svg"]);
     node.textContent = this.text;
+    deleteBtn.addEventListener("click", () =>
+      this.nodeWrapper.remove()
+    );
+    tick.addEventListener('change', (e:any) => {
+      if(e.target.checked) {
+        this.ticked = true;
+      } else {
+        this.ticked = false;
+      }
+    });
     return { tick, node, deleteBtn };
   }
-  // TODO: addElement function HTML Hardcode overload
-  // Backend Save function of Data
+  // TODO: JSON representation implementation
 
   private addElement(name: string, ...attributes: [string, string][]) {
     let element = document.createElement(name);
@@ -37,6 +45,9 @@ class ListNode {
       element.setAttribute(attribute[0], attribute[1]);
     }
     return element;
+  }
+  private static addElementAsJson(node: ListNode) {
+
   }
   public static createNewListNode() {
     const input: HTMLInputElement | null = document.querySelector(
