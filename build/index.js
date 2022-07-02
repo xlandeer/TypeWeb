@@ -5,33 +5,32 @@ class ListNode {
         this.parent = document.querySelector(".checklist-inner");
         this.nodeWrapper = document.createElement("div");
         this.nodeWrapper.className = 'node-wrapper';
-        let deleteBtn = document.createElement("div");
-        let node = document.createElement("div");
-        let tick = document.createElement("input");
-        tick.type = 'checkbox';
-        node.textContent = text;
-        node.className = 'node';
-        tick.className = 'tick';
-        deleteBtn.className = 'delete-btn';
-        appendElement(this.nodeWrapper, tick, node, deleteBtn);
+        let nodeElements = this.createNodeElements();
+        appendElements(this.nodeWrapper, nodeElements.tick, nodeElements.node, nodeElements.deleteBtn);
+        console.log(this.nodeWrapper);
         if (this.parent) {
-            appendElement(this.parent, this.nodeWrapper);
+            appendElements(this.parent, this.nodeWrapper);
         }
-        deleteBtn.addEventListener('click', () => this.delete(this.nodeWrapper));
+        nodeElements.deleteBtn.addEventListener('click', () => this.nodeWrapper.remove());
+    }
+    createNodeElements() {
+        let tick = this.addElement("input", ["classname", "tick"], ["type", "checkbox"]);
+        let node = this.addElement("div", ["classname", "node"], ["textContent", this.text]);
+        let deleteBtn = this.addElement("div", ["classname", "delete-btn"]);
+        console.log(deleteBtn);
+        return { tick, node, deleteBtn };
     }
     ///TODO: addElement function (Overloads)
-    addElements(...elementNames) {
-        let ret = [];
-        for (const elementName of elementNames) {
-            ret.push(document.createElement(elementName));
+    // Backend Save function of Data
+    addElement(name, ...attributes) {
+        let element = document.createElement(name);
+        for (const attribute of attributes) {
+            element.setAttribute(attribute[0], attribute[1]);
         }
-        return ret;
-    }
-    delete(nodeWrapper) {
-        nodeWrapper.remove();
+        return element;
     }
 }
-function appendElement(parent, ...nodes) {
+function appendElements(parent, ...nodes) {
     for (const node of nodes) {
         parent.appendChild(node);
     }
