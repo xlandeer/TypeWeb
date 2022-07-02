@@ -23,7 +23,7 @@ class ListNode {
   private createNodeElements() {
     let tick = this.addElement("input", ["class", "tick"], ["type", "checkbox"]);
     let node = this.addElement("div", ["class", "node"]);
-    let deleteBtn = this.addElement("input", ["class", "delete-btn"], ["type", "image"], ["src", "icons/x_btn.svg"]);
+    let deleteBtn = this.addElement("input", ["class", "delete-btn"], ["type", "image"], ["src", "images/x_btn.svg"]);
     node.textContent = this.text;
     deleteBtn.addEventListener("click", () =>
       this.nodeWrapper.remove()

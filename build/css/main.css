@@ -38,6 +38,8 @@ body main .checklist .checklist-wrapper .checklist-inner .node-wrapper {
 }
 body main .checklist .checklist-wrapper .checklist-inner .node-wrapper .tick {
   aspect-ratio: 1;
+  height: 150%;
+  width: 150%;
 }
 body main .checklist .checklist-wrapper .checklist-inner .node-wrapper .node {
   width: 100%;
