@@ -1,17 +1,20 @@
 class ListNode {
   private parent;
   private nodeWrapper;
-  private ticked = false;
+  private id;
+  private static nodeAmount = 0;
 
+  constructor(private text: string, private checked: boolean = false) {
+    this.id = ListNode.nodeAmount;
+    ListNode.nodeAmount++;
 
-  constructor(private text: string) {
     this.parent = document.querySelector(".checklist-inner");
     this.nodeWrapper = document.createElement("div");
     this.nodeWrapper.className = "node-wrapper";
     let nodeElements = this.createNodeElements();
     ListNode.appendElements(
       this.nodeWrapper,
-      nodeElements.tick,
+      nodeElements.check,
       nodeElements.node,
       nodeElements.deleteBtn
     );
@@ -21,23 +24,34 @@ class ListNode {
   }
 
   private createNodeElements() {
-    let tick = this.addElement("input", ["class", "tick"], ["type", "checkbox"]);
+    let a = document.createElement("input");
+    let check = this.addElement(
+      "input",
+      ["class", "check"],
+      ["type", "checkbox"]
+    ) as HTMLInputElement;
+    check.checked = this.checked;
     let node = this.addElement("div", ["class", "node"]);
-    let deleteBtn = this.addElement("input", ["class", "delete-btn"], ["type", "image"], ["src", "images/x_btn.svg"]);
-    node.textContent = this.text;
-    deleteBtn.addEventListener("click", () =>
-      this.nodeWrapper.remove()
+    let deleteBtn = this.addElement(
+      "input",
+      ["class", "delete-btn"],
+      ["type", "image"],
+      ["src", "images/x_btn.svg"]
     );
-    tick.addEventListener('change', (e:any) => {
-      if(e.target.checked) {
-        this.ticked = true;
-      } else {
-        this.ticked = false;
-      }
+    node.textContent = this.text;
+    deleteBtn.addEventListener("click", () => {
+      this.nodeWrapper.remove();
+      localStorage.removeItem(this.id.toString());
+      ListNode.nodeAmount--;
     });
-    return { tick, node, deleteBtn };
+    check.addEventListener("change", () => {
+      this.checked = !this.checked;
+
+      localStorage.removeItem(this.id.toString());
+      localStorage.setItem(this.id.toString(), JSON.stringify(this));
+    });
+    return { check, node, deleteBtn };
   }
-  // TODO: JSON representation implementation
 
   private addElement(name: string, ...attributes: [string, string][]) {
     let element = document.createElement(name);
@@ -46,9 +60,6 @@ class ListNode {
     }
     return element;
   }
-  private static addElementAsJson(node: ListNode) {
-
-  }
   public static createNewListNode() {
     const input: HTMLInputElement | null = document.querySelector(
       ".checklist .checklist-controls input"
@@ -56,21 +67,35 @@ class ListNode {
     if (input?.value) {
       let node = new ListNode(input.value);
       input.value = "";
+      localStorage.setItem(node.id.toString(), JSON.stringify(node));
     }
-  };
-  public static appendElements<T extends HTMLElement>(parent: Element, ...nodes: T[]) {
+  }
+  public static appendElements<T extends HTMLElement>(
+    parent: Element,
+    ...nodes: T[]
+  ) {
     for (const node of nodes) {
       parent.appendChild(node);
     }
   }
-}
-
-
-let addBtn = document.querySelector(".add-btn");
-let ms2Enter = document.getElementById("textField");
-ms2Enter?.addEventListener("keypress", (e: KeyboardEvent) => {
-  if (e.key == "Enter") {
-    ListNode.createNewListNode();
+  public static generateFromStorage() {
+    for (const item in { ...localStorage }) {
+      const n = localStorage.getItem(item);
+      if (n) {
+        let nodeObject: ListNode = JSON.parse(n);
+        let node: ListNode = new ListNode(nodeObject.text, nodeObject.checked);
+      }
+    }
   }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  ListNode.generateFromStorage();
+  let addBtn = document.querySelector(".add-btn");
+  let ms2Enter = document.getElementById("textField");
+  ms2Enter?.addEventListener("keypress", (e: KeyboardEvent) => {
+    if (e.key == "Enter") {
+      ListNode.createNewListNode();
+    }
+  });
+  addBtn?.addEventListener("click", ListNode.createNewListNode);
 });
-addBtn?.addEventListener("click", ListNode.createNewListNode);
