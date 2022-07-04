@@ -1,32 +1,37 @@
 "use strict";
 class ListNode {
-    constructor(text) {
+    constructor(text, checked = false) {
         this.text = text;
-        this.ticked = false;
+        this.checked = checked;
+        this.id = ListNode.nodeAmount;
+        ListNode.nodeAmount++;
         this.parent = document.querySelector(".checklist-inner");
         this.nodeWrapper = document.createElement("div");
         this.nodeWrapper.className = "node-wrapper";
         let nodeElements = this.createNodeElements();
-        ListNode.appendElements(this.nodeWrapper, nodeElements.tick, nodeElements.node, nodeElements.deleteBtn);
+        ListNode.appendElements(this.nodeWrapper, nodeElements.check, nodeElements.node, nodeElements.deleteBtn);
         if (this.parent) {
             ListNode.appendElements(this.parent, this.nodeWrapper);
         }
     }
     createNodeElements() {
-        let tick = this.addElement("input", ["class", "tick"], ["type", "checkbox"]);
+        let a = document.createElement("input");
+        let check = this.addElement("input", ["class", "check"], ["type", "checkbox"]);
+        check.checked = this.checked;
         let node = this.addElement("div", ["class", "node"]);
         let deleteBtn = this.addElement("input", ["class", "delete-btn"], ["type", "image"], ["src", "images/x_btn.svg"]);
         node.textContent = this.text;
-        deleteBtn.addEventListener("click", () => this.nodeWrapper.remove());
-        tick.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                this.ticked = true;
-            }
-            else {
-                this.ticked = false;
-            }
+        deleteBtn.addEventListener("click", () => {
+            this.nodeWrapper.remove();
+            localStorage.removeItem(this.id.toString());
+            ListNode.nodeAmount--;
         });
-        return { tick, node, deleteBtn };
+        check.addEventListener('change', () => {
+            this.checked = !this.checked;
+            localStorage.removeItem(this.id.toString());
+            localStorage.setItem(this.id.toString(), JSON.stringify(this));
+        });
+        return { check, node, deleteBtn };
     }
     // TODO: JSON representation implementation
     addElement(name, ...attributes) {
@@ -36,13 +41,12 @@ class ListNode {
         }
         return element;
     }
-    static addElementAsJson(node) {
-    }
     static createNewListNode() {
         const input = document.querySelector(".checklist .checklist-controls input");
         if (input === null || input === void 0 ? void 0 : input.value) {
             let node = new ListNode(input.value);
             input.value = "";
+            localStorage.setItem(node.id.toString(), JSON.stringify(node));
         }
     }
     ;
@@ -51,13 +55,26 @@ class ListNode {
             parent.appendChild(node);
         }
     }
-}
-let addBtn = document.querySelector(".add-btn");
-let ms2Enter = document.getElementById("textField");
-ms2Enter === null || ms2Enter === void 0 ? void 0 : ms2Enter.addEventListener("keypress", (e) => {
-    if (e.key == "Enter") {
-        ListNode.createNewListNode();
+    static generateFromStorage() {
+        for (const item in Object.assign({}, localStorage)) {
+            const n = localStorage.getItem(item);
+            if (n) {
+                let nodeObject = JSON.parse(n);
+                let node = new ListNode(nodeObject.text, nodeObject.checked);
+            }
+        }
     }
+}
+ListNode.nodeAmount = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    ListNode.generateFromStorage();
+    let addBtn = document.querySelector(".add-btn");
+    let ms2Enter = document.getElementById("textField");
+    ms2Enter === null || ms2Enter === void 0 ? void 0 : ms2Enter.addEventListener("keypress", (e) => {
+        if (e.key == "Enter") {
+            ListNode.createNewListNode();
+        }
+    });
+    addBtn === null || addBtn === void 0 ? void 0 : addBtn.addEventListener("click", ListNode.createNewListNode);
 });
-addBtn === null || addBtn === void 0 ? void 0 : addBtn.addEventListener("click", ListNode.createNewListNode);
 //# sourceMappingURL=index.js.map
