@@ -57,7 +57,7 @@ body main .checklist .checklist-wrapper .checklist-inner .node-wrapper {
   place-items: center;
   margin: 1rem 0;
 }
-body main .checklist .checklist-wrapper .checklist-inner .node-wrapper .tick {
+body main .checklist .checklist-wrapper .checklist-inner .node-wrapper .check {
   width: 100%;
   aspect-ratio: 1;
   cursor: pointer;
