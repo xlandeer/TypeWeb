@@ -5,9 +5,9 @@ Partly learned from:
 
 * Project Ideas:
   - [x] Checklist
+  - [ ] Maze Generator
   - [ ] Chess-Engine(Already begun)
   - [ ] Small scoped browser Game
-  - [ ] Maze Generator
 ## Setup ##
 ```sh
 $ npm init
