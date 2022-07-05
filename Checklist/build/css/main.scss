@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+$bgColor: #171717;
+$primeColor: #fff;
+$scondaryColor: #2596be;
+
+body {
+	background-color: $bgColor;
+
+	main {
+		font-family: "Poppins";
+		color: $primeColor;
+
+		.checklist .checklist-wrapper {
+			.checklist-controls {
+				display: flex;
+				.add-btn {
+					color: $primeColor;
+					background-color: transparent;
+					border: 1px solid $primeColor;
+					border-radius: 20px;
+					padding: 0.5rem 1.2rem;
+					transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
+
+					&:hover {
+						color: $scondaryColor;
+						border-color: $scondaryColor;
+					}
+				}
+
+				.input-wrapper {
+					position: relative;
+					input#textField {
+						color: $primeColor;
+						background-color: transparent;
+						border: 1px solid $primeColor;
+						border-radius: 20px;
+						padding: 0.5rem 1.2rem;
+						transition: border 0.3s ease-in-out;
+	
+						&:is(:hover, :focus) {
+							border-color: $scondaryColor;
+							outline: none;
+						}
+
+
+						// styling of the placeholder if input is focused
+						&:focus~.floating-label,
+						&:not(:focus):valid~.floating-label {
+							top: -10%;
+						}
+					}
+					.floating-label {
+						position: absolute;
+						top: 50%;
+						left: 8%;
+						padding: 0 5px;
+						transform: translateY(-50%);
+						background-color: $bgColor;
+						color: $primeColor;
+						pointer-events: none;
+						transition: top 0.3s ease-in-out;
+					}
+					
+				}
+			}
+
+			.checklist-inner {
+				.node-wrapper {
+					display: grid;
+					grid-template-columns: 30px 10fr 30px;
+					gap: 1rem;
+					place-items: center;
+					margin: 1rem 0;
+					.check {
+						width: 100%;
+						aspect-ratio: 1;
+						cursor: pointer;
+					}
+					.node {
+						width: 100%;
+						height: 100%;
+						background-color: $primeColor;
+						color: $bgColor;
+						padding: 1rem;
+						border-radius: 20px;
+				
+					}
+					.delete-btn {
+						width: 100%;
+						aspect-ratio: 1;
+						background-color: #fff;
+					}
+					
+					
+					
+				}
+			}
+		}
+	}
+}
+
