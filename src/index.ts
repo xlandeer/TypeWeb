@@ -1,17 +1,13 @@
-import { dir } from "console";
-
 enum Direction {
   Up,
   Right,
   Down,
-  Left
+  Left,
 }
-
-
 
 class Maze {
   private map: Cell[][];
-  private stack: Cell[] = new Array()
+  private stack: Cell[] = new Array();
 
   constructor(private width: number, private height: number) {
     this.map = new Array(this.width);
@@ -34,9 +30,13 @@ class Maze {
         if (current) {
           let neighbours = this.getAvailableNeighbours(current);
           if (neighbours.length) {
-            let neighbour = neighbours[Math.floor((Math.random() * neighbours.length))]
+            let neighbour =
+              neighbours[Math.floor(Math.random() * neighbours.length)];
             this.removeWallsBetween(current, neighbour);
 
+            current.visited = true;
+            neighbour.cell.visited = true;
+            this.stack.push(current);
             this.stack.push(neighbour.cell);
           } else {
             deadend = true;
@@ -44,60 +44,74 @@ class Maze {
           // this.stack.push(current);
         }
       }
-      
 
       this.stack.pop();
       deadend = false;
-
     }
   }
 
-
-  private removeWallsBetween(currentCell: Cell, nextCell: { cell: Cell, direction: Direction }) {
+  private removeWallsBetween(
+    currentCell: Cell,
+    nextCell: { cell: Cell; direction: Direction }
+  ) {
     currentCell.setWall(nextCell.direction, false);
     nextCell.cell.setWall((nextCell.direction + 2) % 4, false);
   }
 
   private getAvailableNeighbours(cell: Cell) {
-    let neighbours: { cell: Cell, direction: Direction }[] = [];
-    const cellPos = cell.getPosition()
+    let neighbours: { cell: Cell; direction: Direction }[] = [];
+    const cellPos = cell.getPosition();
 
     // check cell on the right side
     if (cellPos.posX + 1 < this.width) {
       if (!this.map[cellPos.posX + 1][cellPos.posY].visited) {
-        neighbours.push({ cell: this.map[cellPos.posX + 1][cellPos.posY], direction: Direction.Right });
+        neighbours.push({
+          cell: this.map[cellPos.posX + 1][cellPos.posY],
+          direction: Direction.Right,
+        });
       }
     }
     // check cell on the left side
     if (cellPos.posX - 1 > this.width) {
       if (!this.map[cellPos.posX - 1][cellPos.posY].visited) {
-        neighbours.push({ cell: this.map[cellPos.posX - 1][cellPos.posY], direction: Direction.Left });
+        neighbours.push({
+          cell: this.map[cellPos.posX - 1][cellPos.posY],
+          direction: Direction.Left,
+        });
       }
     }
     // check cell infront
     if (cellPos.posY + 1 < this.height) {
       if (!this.map[cellPos.posX][cellPos.posY + 1].visited) {
-        neighbours.push({ cell: this.map[cellPos.posX][cellPos.posY + 1], direction: Direction.Up });
+        neighbours.push({
+          cell: this.map[cellPos.posX][cellPos.posY + 1],
+          direction: Direction.Up,
+        });
       }
     }
     // check cell behind
     if (cellPos.posY - 1 > this.height) {
       if (!this.map[cellPos.posX][cellPos.posY - 1].visited) {
-        neighbours.push({ cell: this.map[cellPos.posX][cellPos.posY - 1], direction: Direction.Down });
+        neighbours.push({
+          cell: this.map[cellPos.posX][cellPos.posY - 1],
+          direction: Direction.Down,
+        });
       }
     }
     return neighbours;
   }
 
   public printMap() {
-    console.log(this.map[0]);
+    console.log(this.map);
   }
 }
-
 class Cell {
   visited: boolean = false;
-  constructor(private walls: boolean[], private posX: number, private posY: number) {
-  }
+  constructor(
+    private walls: boolean[],
+    private posX: number,
+    private posY: number
+  ) {}
 
   // public getWalls () {
   //     return this.walls;
