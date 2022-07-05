@@ -6,6 +6,7 @@ Partly learned from:
 * Project Ideas:
   - [ ] Chess-Engine(Already begun)
   - [ ] Small scoped browser Game
+  - [ ] Maze Generator
   - [x] Sample programs, e.g.: Checklist, Calender 
 ## Setup ##
 ```sh
