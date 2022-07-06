@@ -5,16 +5,19 @@ $scondaryColor: #2596be;
 
 body {
 	background-color: $bgColor;
-
 	main {
 		font-family: "Poppins";
 		color: $primeColor;
-
-		.maze-wrapper>*:first-child,
-		.maze-wrapper>*:last-child {
-			background-color: rgb(15, 71, 78);
+		.maze-wrapper {
+			width: max-content;
+			left: 50%;
+			position: relative;
+			transform: translateX(-50%);
+			*:first-child,
+			*:last-child {
+				background-color: rgb(15, 71, 78);
+			}
 		}
-
-	}
+		}
 }
 
