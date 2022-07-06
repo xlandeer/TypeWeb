@@ -10,6 +10,10 @@ body {
 		font-family: "Poppins";
 		color: $primeColor;
 
+		.maze-wrapper>*:first-child,
+		.maze-wrapper>*:last-child {
+			background-color: rgb(15, 71, 78);
+		}
 
 	}
 }

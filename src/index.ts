@@ -25,23 +25,22 @@ class Maze {
     this.stack.push(this.map[0][0]);
     let deadend: boolean = false;
     while (this.stack.length) {
-      while (!deadend) {
+      while (!deadend) {        
         let current = this.stack.pop();
         if (current) {
           let neighbours = this.getAvailableNeighbours(current);
           if (neighbours.length) {
-            let neighbour =
-              neighbours[Math.floor(Math.random() * neighbours.length)];
+            let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
             this.removeWallsBetween(current, neighbour);
-
+            
             current.visited = true;
             neighbour.cell.visited = true;
-            this.stack.push(current);
+            // this.stack.push(current);
             this.stack.push(neighbour.cell);
           } else {
             deadend = true;
           }
-          // this.stack.push(current);
+          this.stack.push(current);
         }
       }
 
@@ -55,7 +54,7 @@ class Maze {
     nextCell: { cell: Cell; direction: Direction }
   ) {
     currentCell.setWall(nextCell.direction, false);
-    nextCell.cell.setWall((nextCell.direction + 2) % 4, false);
+    nextCell.cell.setWall((nextCell.direction + 2) % 4, false);        
   }
 
   private getAvailableNeighbours(cell: Cell) {
@@ -72,7 +71,7 @@ class Maze {
       }
     }
     // check cell on the left side
-    if (cellPos.posX - 1 > this.width) {
+    if (cellPos.posX - 1 >= 0) {
       if (!this.map[cellPos.posX - 1][cellPos.posY].visited) {
         neighbours.push({
           cell: this.map[cellPos.posX - 1][cellPos.posY],
@@ -85,16 +84,16 @@ class Maze {
       if (!this.map[cellPos.posX][cellPos.posY + 1].visited) {
         neighbours.push({
           cell: this.map[cellPos.posX][cellPos.posY + 1],
-          direction: Direction.Up,
+          direction: Direction.Down,
         });
       }
     }
     // check cell behind
-    if (cellPos.posY - 1 > this.height) {
+    if (cellPos.posY - 1 >= 0) {
       if (!this.map[cellPos.posX][cellPos.posY - 1].visited) {
         neighbours.push({
           cell: this.map[cellPos.posX][cellPos.posY - 1],
-          direction: Direction.Down,
+          direction: Direction.Up,
         });
       }
     }
@@ -102,7 +101,24 @@ class Maze {
   }
 
   public printMap() {
-    console.log(this.map);
+    let mazeWrapper: HTMLElement | null = document.querySelector('.maze-wrapper');
+    if (mazeWrapper != null) {
+      mazeWrapper.style.display = 'grid';
+      mazeWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
+      mazeWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
+      for (let y: number = 0; y < this.height; y++) {
+        for (let x: number = 0; x < this.width; x++) {
+          const cellWalls = this.map[x][y].getWalls();
+          let div: HTMLElement = document.createElement('div');         
+          if (cellWalls[0]) div.style.borderTop = '1px solid #fff';
+          if (cellWalls[1]) div.style.borderRight = '1px solid #fff';
+          if (cellWalls[2]) div.style.borderBottom = '1px solid #fff';
+          if (cellWalls[3]) div.style.borderLeft = '1px solid #fff';
+          mazeWrapper.appendChild(div);
+        }
+
+      }
+    }    
   }
 }
 class Cell {
@@ -113,12 +129,11 @@ class Cell {
     private posY: number
   ) {}
 
-  // public getWalls () {
-  //     return this.walls;
-  // }
-
+  public getWalls () {
+      return this.walls;
+  }
   public setWall(direction: Direction, value: boolean) {
-    this.walls[direction] = value;
+    this.walls[direction] = value;    
   }
 
   public getPosition() {
@@ -126,5 +141,7 @@ class Cell {
   }
 }
 
-let maze = new Maze(5, 5);
-maze.printMap();
+document.addEventListener("DOMContentLoaded", () => {
+  let maze = new Maze(50, 20);
+  maze.printMap();
+});

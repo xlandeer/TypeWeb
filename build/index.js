@@ -33,13 +33,13 @@ class Maze {
                         this.removeWallsBetween(current, neighbour);
                         current.visited = true;
                         neighbour.cell.visited = true;
-                        this.stack.push(current);
+                        // this.stack.push(current);
                         this.stack.push(neighbour.cell);
                     }
                     else {
                         deadend = true;
                     }
-                    // this.stack.push(current);
+                    this.stack.push(current);
                 }
             }
             this.stack.pop();
@@ -63,7 +63,7 @@ class Maze {
             }
         }
         // check cell on the left side
-        if (cellPos.posX - 1 > this.width) {
+        if (cellPos.posX - 1 >= 0) {
             if (!this.map[cellPos.posX - 1][cellPos.posY].visited) {
                 neighbours.push({
                     cell: this.map[cellPos.posX - 1][cellPos.posY],
@@ -76,23 +76,43 @@ class Maze {
             if (!this.map[cellPos.posX][cellPos.posY + 1].visited) {
                 neighbours.push({
                     cell: this.map[cellPos.posX][cellPos.posY + 1],
-                    direction: Direction.Up,
+                    direction: Direction.Down,
                 });
             }
         }
         // check cell behind
-        if (cellPos.posY - 1 > this.height) {
+        if (cellPos.posY - 1 >= 0) {
             if (!this.map[cellPos.posX][cellPos.posY - 1].visited) {
                 neighbours.push({
                     cell: this.map[cellPos.posX][cellPos.posY - 1],
-                    direction: Direction.Down,
+                    direction: Direction.Up,
                 });
             }
         }
         return neighbours;
     }
     printMap() {
-        console.log(this.map);
+        let mazeWrapper = document.querySelector('.maze-wrapper');
+        if (mazeWrapper != null) {
+            mazeWrapper.style.display = 'grid';
+            mazeWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
+            mazeWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
+                    const cellWalls = this.map[x][y].getWalls();
+                    let div = document.createElement('div');
+                    if (cellWalls[0])
+                        div.style.borderTop = '1px solid #fff';
+                    if (cellWalls[1])
+                        div.style.borderRight = '1px solid #fff';
+                    if (cellWalls[2])
+                        div.style.borderBottom = '1px solid #fff';
+                    if (cellWalls[3])
+                        div.style.borderLeft = '1px solid #fff';
+                    mazeWrapper.appendChild(div);
+                }
+            }
+        }
     }
 }
 class Cell {
@@ -102,9 +122,9 @@ class Cell {
         this.posY = posY;
         this.visited = false;
     }
-    // public getWalls () {
-    //     return this.walls;
-    // }
+    getWalls() {
+        return this.walls;
+    }
     setWall(direction, value) {
         this.walls[direction] = value;
     }
@@ -112,6 +132,8 @@ class Cell {
         return { posX: this.posX, posY: this.posY };
     }
 }
-let maze = new Maze(5, 5);
-maze.printMap();
+document.addEventListener("DOMContentLoaded", () => {
+    let maze = new Maze(50, 20);
+    maze.printMap();
+});
 //# sourceMappingURL=index.js.map
