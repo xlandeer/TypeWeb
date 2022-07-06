@@ -10,7 +10,7 @@ class Maze {
   private stack: Cell[] = new Array();
   private mazeWrapper: HTMLDivElement;
 
-  constructor(private width: number, private height: number, private parent: HTMLElement |null = document.querySelector('main')) {
+  constructor(private width: number, private height: number, private parent: HTMLElement | null = document.querySelector('main')) {
     this.map = new Array(this.width);
     this.mazeWrapper = document.createElement('div');
     this.mazeWrapper.setAttribute('class', 'maze-wrapper');
@@ -21,30 +21,30 @@ class Maze {
 
     for (let y: number = 0; y < this.height; y++) {
       this.map[y] = new Array(this.width);
-      for (let x: number = 0; x < this.height; x++) {
+      for (let x: number = 0; x < this.width; x++) {
         this.map[y][x] = new Cell([true, true, true, true], y, x, this.mazeWrapper);
       }
     }
 
-    
+
     this.generateMaze();
   }
 
-  private async generateMaze() {
+  private generateMaze() {
     this.stack.push(this.map[0][0]);
     this.map[0][0].visited = true;
     let deadend: boolean = false;
     while (this.stack.length) {
-      while (!deadend) {        
+      while (!deadend) {
         let current = this.stack.pop();
-        
+
         if (current) {
           let neighbours = this.getAvailableNeighbours(current);
           this.stack.push(current);
           if (neighbours.length) {
             let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
-            await this.removeWallsBetween(current, neighbour);
-            
+            this.removeWallsBetween(current, neighbour);
+
             neighbour.cell.visited = true;
             this.stack.push(neighbour.cell);
           } else {
@@ -58,12 +58,12 @@ class Maze {
     }
   }
 
-  private async removeWallsBetween(
+  private removeWallsBetween(
     currentCell: Cell,
     nextCell: { cell: Cell; direction: Direction }
   ) {
-    await currentCell.setWall(nextCell.direction, false);
-    await nextCell.cell.setWall((nextCell.direction + 2) % 4, false);        
+    currentCell.setWall(nextCell.direction, false);
+    nextCell.cell.setWall((nextCell.direction + 2) % 4, false);
   }
 
   private getAvailableNeighbours(cell: Cell) {
@@ -109,25 +109,34 @@ class Maze {
     return neighbours;
   }
 
+  private checkWalls(neighbours: { cell: Cell, direction: Direction }[]) {
+    let ret: { cell: Cell, direction: Direction }[] = [];
+    for (const neighbour of neighbours) {
+      if (neighbour.cell.getWalls()[neighbour.direction]) ret.push(neighbour);
+    }
+    return ret;
+  }
+
+
   public printMap() {
-    // for (let y: number = 0; y < this.height; y++) {      
-    //   for (let x: number = 0; x < this.width; x++) {
-    //     this.map[y][x].drawCell();
-    //   }
-    // }
-    
+    for (let y: number = 0; y < this.height; y++) {
+      for (let x: number = 0; x < this.width; x++) {
+        this.map[y][x].drawCell();
+      }
+    }
+
     let mazeString = '';
     for (let y: number = 0; y < this.height; y++) {
-      for(let i: number = 0; i < 3; i++) {
+      for (let i: number = 0; i < 3; i++) {
         for (let x: number = 0; x < this.width; x++) {
           const cellWalls = this.map[y][x].getWalls();
           if (i == 0) {
             mazeString += (cellWalls[Direction.Up]) ? '111' : '101';
-          }else if(i == 1) {
+          } else if (i == 1) {
             mazeString += (cellWalls[Direction.Left]) ? '1' : '0';
             mazeString += '0';
             mazeString += (cellWalls[Direction.Right]) ? '1' : '0';
-          }else {
+          } else {
             mazeString += (cellWalls[Direction.Down]) ? '111' : '101';
           }
         }
@@ -135,7 +144,43 @@ class Maze {
       }
     }
     console.log(mazeString);
-       
+
+  }
+
+  public printPath() {
+    let path: Cell[] = [];
+    this.map.forEach((cellArray: Cell[]) => {
+      cellArray.forEach((cell: Cell) => {
+        cell.visited = false;
+      });
+    });
+    path.push(this.map[0][0]);
+    this.map[0][0].visited = true;
+    let deadend: boolean = false;
+    let current: Cell | undefined;
+    while (current?.getPosition().posX !== this.width - 1 && current?.getPosition().posY !== this.height - 1) {
+      while (!deadend) {
+
+        current = path.pop();
+
+        if (current) {
+          let neighbours = this.checkWalls(this.getAvailableNeighbours(current));
+          path.push(current);
+          if (neighbours.length) {
+            let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+
+            neighbour.cell.visited = true;
+            path.push(neighbour.cell);
+          } else {
+            deadend = true;
+          }
+        }        
+      }
+      path.pop();
+      deadend = false;
+    }
+    console.log(path);
+
   }
 }
 class Cell {
@@ -150,12 +195,11 @@ class Cell {
     this.mazeWrapper.appendChild(this.div);
   }
 
-  public getWalls () {
-      return this.walls;
+  public getWalls() {
+    return this.walls;
   }
-  public async setWall(direction: Direction, value: boolean) {
-    this.walls[direction] = value; 
-    await this.drawCell();   
+  public setWall(direction: Direction, value: boolean) {
+    this.walls[direction] = value;
   }
 
   public getPosition() {
@@ -163,7 +207,6 @@ class Cell {
   }
 
   public drawCell() {
-    return new Promise<void>((resolve) => {
     //   setTimeout(() => {
     //     let div: HTMLElement = document.createElement('div');
     //     if (this.walls[Direction.Up]) div.style.borderTop = '1px solid #fff';
@@ -174,19 +217,16 @@ class Cell {
     //     resolve()
     //   }, time)
     // })
-      window.setTimeout(() => {
-        this.div.style.border = 'none';
-        if (this.walls[Direction.Up]) this.div.style.borderTop = '1px solid #fff';
-        if (this.walls[Direction.Right]) this.div.style.borderRight = '1px solid #fff';
-        if (this.walls[Direction.Down]) this.div.style.borderBottom = '1px solid #fff';
-        if (this.walls[Direction.Left]) this.div.style.borderLeft = '1px solid #fff';
-        resolve();
-      }, 10)
-    })
+    this.div.style.border = 'none';
+    if (this.walls[Direction.Up]) this.div.style.borderTop = '1px solid #fff';
+    if (this.walls[Direction.Right]) this.div.style.borderRight = '1px solid #fff';
+    if (this.walls[Direction.Down]) this.div.style.borderBottom = '1px solid #fff';
+    if (this.walls[Direction.Left]) this.div.style.borderLeft = '1px solid #fff';
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   let maze = new Maze(15, 15);
   maze.printMap();
+  maze.printPath();
 });

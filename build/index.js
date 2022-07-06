@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var Direction;
 (function (Direction) {
     Direction[Direction["Up"] = 0] = "Up";
@@ -31,44 +22,40 @@ class Maze {
         (_a = this.parent) === null || _a === void 0 ? void 0 : _a.appendChild(this.mazeWrapper);
         for (let y = 0; y < this.height; y++) {
             this.map[y] = new Array(this.width);
-            for (let x = 0; x < this.height; x++) {
+            for (let x = 0; x < this.width; x++) {
                 this.map[y][x] = new Cell([true, true, true, true], y, x, this.mazeWrapper);
             }
         }
         this.generateMaze();
     }
     generateMaze() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.stack.push(this.map[0][0]);
-            this.map[0][0].visited = true;
-            let deadend = false;
-            while (this.stack.length) {
-                while (!deadend) {
-                    let current = this.stack.pop();
-                    if (current) {
-                        let neighbours = this.getAvailableNeighbours(current);
-                        this.stack.push(current);
-                        if (neighbours.length) {
-                            let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
-                            yield this.removeWallsBetween(current, neighbour);
-                            neighbour.cell.visited = true;
-                            this.stack.push(neighbour.cell);
-                        }
-                        else {
-                            deadend = true;
-                        }
+        this.stack.push(this.map[0][0]);
+        this.map[0][0].visited = true;
+        let deadend = false;
+        while (this.stack.length) {
+            while (!deadend) {
+                let current = this.stack.pop();
+                if (current) {
+                    let neighbours = this.getAvailableNeighbours(current);
+                    this.stack.push(current);
+                    if (neighbours.length) {
+                        let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+                        this.removeWallsBetween(current, neighbour);
+                        neighbour.cell.visited = true;
+                        this.stack.push(neighbour.cell);
+                    }
+                    else {
+                        deadend = true;
                     }
                 }
-                this.stack.pop();
-                deadend = false;
             }
-        });
+            this.stack.pop();
+            deadend = false;
+        }
     }
     removeWallsBetween(currentCell, nextCell) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield currentCell.setWall(nextCell.direction, false);
-            yield nextCell.cell.setWall((nextCell.direction + 2) % 4, false);
-        });
+        currentCell.setWall(nextCell.direction, false);
+        nextCell.cell.setWall((nextCell.direction + 2) % 4, false);
     }
     getAvailableNeighbours(cell) {
         let neighbours = [];
@@ -111,12 +98,20 @@ class Maze {
         }
         return neighbours;
     }
+    checkWalls(neighbours) {
+        let ret = [];
+        for (const neighbour of neighbours) {
+            if (neighbour.cell.getWalls()[neighbour.direction])
+                ret.push(neighbour);
+        }
+        return ret;
+    }
     printMap() {
-        // for (let y: number = 0; y < this.height; y++) {      
-        //   for (let x: number = 0; x < this.width; x++) {
-        //     this.map[y][x].drawCell();
-        //   }
-        // }
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                this.map[y][x].drawCell();
+            }
+        }
         let mazeString = '';
         for (let y = 0; y < this.height; y++) {
             for (let i = 0; i < 3; i++) {
@@ -139,6 +134,39 @@ class Maze {
         }
         console.log(mazeString);
     }
+    printPath() {
+        let path = [];
+        this.map.forEach((cellArray) => {
+            cellArray.forEach((cell) => {
+                cell.visited = false;
+            });
+        });
+        path.push(this.map[0][0]);
+        this.map[0][0].visited = true;
+        let deadend = false;
+        let current;
+        while ((current === null || current === void 0 ? void 0 : current.getPosition().posX) !== this.width - 1 && (current === null || current === void 0 ? void 0 : current.getPosition().posY) !== this.height - 1) {
+            while (!deadend) {
+                current = path.pop();
+                if (current) {
+                    let neighbours = this.checkWalls(this.getAvailableNeighbours(current));
+                    path.push(current);
+                    if (neighbours.length) {
+                        let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+                        neighbour.cell.visited = true;
+                        path.push(neighbour.cell);
+                    }
+                    else {
+                        deadend = true;
+                    }
+                }
+            }
+            console.log(current);
+            path.pop();
+            deadend = false;
+        }
+        console.log(path);
+    }
 }
 class Cell {
     constructor(walls, posY, posX, mazeWrapper) {
@@ -154,43 +182,36 @@ class Cell {
         return this.walls;
     }
     setWall(direction, value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.walls[direction] = value;
-            yield this.drawCell();
-        });
+        this.walls[direction] = value;
     }
     getPosition() {
         return { posX: this.posX, posY: this.posY };
     }
     drawCell() {
-        return new Promise((resolve) => {
-            //   setTimeout(() => {
-            //     let div: HTMLElement = document.createElement('div');
-            //     if (this.walls[Direction.Up]) div.style.borderTop = '1px solid #fff';
-            //     if (this.walls[Direction.Right]) div.style.borderRight = '1px solid #fff';
-            //     if (this.walls[Direction.Down]) div.style.borderBottom = '1px solid #fff';
-            //     if (this.walls[Direction.Left]) div.style.borderLeft = '1px solid #fff';
-            //     this.mazeWrapper.appendChild(div);
-            //     resolve()
-            //   }, time)
-            // })
-            window.setTimeout(() => {
-                this.div.style.border = 'none';
-                if (this.walls[Direction.Up])
-                    this.div.style.borderTop = '1px solid #fff';
-                if (this.walls[Direction.Right])
-                    this.div.style.borderRight = '1px solid #fff';
-                if (this.walls[Direction.Down])
-                    this.div.style.borderBottom = '1px solid #fff';
-                if (this.walls[Direction.Left])
-                    this.div.style.borderLeft = '1px solid #fff';
-                resolve();
-            }, 10);
-        });
+        //   setTimeout(() => {
+        //     let div: HTMLElement = document.createElement('div');
+        //     if (this.walls[Direction.Up]) div.style.borderTop = '1px solid #fff';
+        //     if (this.walls[Direction.Right]) div.style.borderRight = '1px solid #fff';
+        //     if (this.walls[Direction.Down]) div.style.borderBottom = '1px solid #fff';
+        //     if (this.walls[Direction.Left]) div.style.borderLeft = '1px solid #fff';
+        //     this.mazeWrapper.appendChild(div);
+        //     resolve()
+        //   }, time)
+        // })
+        this.div.style.border = 'none';
+        if (this.walls[Direction.Up])
+            this.div.style.borderTop = '1px solid #fff';
+        if (this.walls[Direction.Right])
+            this.div.style.borderRight = '1px solid #fff';
+        if (this.walls[Direction.Down])
+            this.div.style.borderBottom = '1px solid #fff';
+        if (this.walls[Direction.Left])
+            this.div.style.borderLeft = '1px solid #fff';
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
     let maze = new Maze(15, 15);
     maze.printMap();
+    maze.printPath();
 });
 //# sourceMappingURL=index.js.map
