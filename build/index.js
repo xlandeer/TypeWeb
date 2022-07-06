@@ -40,6 +40,7 @@ class Maze {
     generateMaze() {
         return __awaiter(this, void 0, void 0, function* () {
             this.stack.push(this.map[0][0]);
+            this.map[0][0].visited = true;
             let deadend = false;
             while (this.stack.length) {
                 while (!deadend) {

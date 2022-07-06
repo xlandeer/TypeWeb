@@ -32,6 +32,7 @@ class Maze {
 
   private async generateMaze() {
     this.stack.push(this.map[0][0]);
+    this.map[0][0].visited = true;
     let deadend: boolean = false;
     while (this.stack.length) {
       while (!deadend) {        
