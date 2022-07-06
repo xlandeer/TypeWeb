@@ -31,7 +31,7 @@ class Maze {
   }
 
   private async generateMaze() {
-    this.stack.push(this.map[Math.floor(Math.random() * this.width)][Math.floor(Math.random() * this.height)]);
+    this.stack.push(this.map[0][0]);
     let deadend: boolean = false;
     while (this.stack.length) {
       while (!deadend) {        
