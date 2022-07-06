@@ -109,11 +109,11 @@ class Maze {
   }
 
   public printMap() {
-    for (let y: number = 0; y < this.height; y++) {      
-      for (let x: number = 0; x < this.width; x++) {
-        this.map[y][x].drawCell();
-      }
-    }
+    // for (let y: number = 0; y < this.height; y++) {      
+    //   for (let x: number = 0; x < this.width; x++) {
+    //     this.map[y][x].drawCell();
+    //   }
+    // }
     
     let mazeString = '';
     for (let y: number = 0; y < this.height; y++) {
@@ -187,5 +187,5 @@ class Cell {
 
 document.addEventListener("DOMContentLoaded", () => {
   let maze = new Maze(15, 15);
-  // maze.printMap();
+  maze.printMap();
 });

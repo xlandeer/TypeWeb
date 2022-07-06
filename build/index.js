@@ -50,9 +50,7 @@ class Maze {
                         if (neighbours.length) {
                             let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
                             yield this.removeWallsBetween(current, neighbour);
-                            // current.visited = true;
                             neighbour.cell.visited = true;
-                            // this.stack.push(current);
                             this.stack.push(neighbour.cell);
                         }
                         else {
@@ -113,11 +111,11 @@ class Maze {
         return neighbours;
     }
     printMap() {
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                this.map[y][x].drawCell();
-            }
-        }
+        // for (let y: number = 0; y < this.height; y++) {      
+        //   for (let x: number = 0; x < this.width; x++) {
+        //     this.map[y][x].drawCell();
+        //   }
+        // }
         let mazeString = '';
         for (let y = 0; y < this.height; y++) {
             for (let i = 0; i < 3; i++) {
@@ -192,6 +190,6 @@ class Cell {
 }
 document.addEventListener("DOMContentLoaded", () => {
     let maze = new Maze(15, 15);
-    // maze.printMap();
+    maze.printMap();
 });
 //# sourceMappingURL=index.js.map
