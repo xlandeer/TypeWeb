@@ -110,15 +110,35 @@ class Maze {
         for (let x: number = 0; x < this.width; x++) {
           const cellWalls = this.map[x][y].getWalls();
           let div: HTMLElement = document.createElement('div');         
-          if (cellWalls[0]) div.style.borderTop = '1px solid #fff';
-          if (cellWalls[1]) div.style.borderRight = '1px solid #fff';
-          if (cellWalls[2]) div.style.borderBottom = '1px solid #fff';
-          if (cellWalls[3]) div.style.borderLeft = '1px solid #fff';
+          if (cellWalls[Direction.Up]) div.style.borderTop = '1px solid #fff';
+          if (cellWalls[Direction.Right]) div.style.borderRight = '1px solid #fff';
+          if (cellWalls[Direction.Down]) div.style.borderBottom = '1px solid #fff';
+          if (cellWalls[Direction.Left]) div.style.borderLeft = '1px solid #fff';
           mazeWrapper.appendChild(div);
         }
 
       }
-    }    
+    }
+    let mazeString = '';
+    for (let y: number = 0; y < this.height; y++) {
+      for(let i: number = 0; i < 3; i++) {
+        for (let x: number = 0; x < this.width; x++) {
+          const cellWalls = this.map[x][y].getWalls();
+          if (i == 0) {
+            mazeString += (cellWalls[Direction.Up]) ? '111' : '101';
+          }else if(i == 1) {
+            mazeString += (cellWalls[Direction.Left]) ? '1' : '0';
+            mazeString += '0';
+            mazeString += (cellWalls[Direction.Right]) ? '1' : '0';
+          }else {
+            mazeString += (cellWalls[Direction.Down]) ? '111' : '101';
+          }
+        }
+        mazeString += '\n';
+      }
+    }
+    console.log(mazeString);
+       
   }
 }
 class Cell {
@@ -142,6 +162,6 @@ class Cell {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  let maze = new Maze(50, 20);
+  let maze = new Maze(8, 8);
   maze.printMap();
 });
