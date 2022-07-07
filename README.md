@@ -5,7 +5,7 @@ Partly learned from:
 
 * Project Ideas:
   - [x] Checklist
-  - [ ] Maze Generator
+  - [x] Maze Generator
   - [ ] Chess-Engine(Already begun)
   - [ ] Small scoped browser Game
 ## Setup ##
