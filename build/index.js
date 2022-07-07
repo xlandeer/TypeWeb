@@ -112,27 +112,27 @@ class Maze {
                 this.map[y][x].drawCell();
             }
         }
-        let mazeString = '';
-        for (let y = 0; y < this.height; y++) {
-            for (let i = 0; i < 3; i++) {
-                for (let x = 0; x < this.width; x++) {
-                    const cellWalls = this.map[y][x].getWalls();
-                    if (i == 0) {
-                        mazeString += (cellWalls[Direction.Up]) ? '111' : '101';
-                    }
-                    else if (i == 1) {
-                        mazeString += (cellWalls[Direction.Left]) ? '1' : '0';
-                        mazeString += '0';
-                        mazeString += (cellWalls[Direction.Right]) ? '1' : '0';
-                    }
-                    else {
-                        mazeString += (cellWalls[Direction.Down]) ? '111' : '101';
-                    }
+        /*
+            let mazeString = '';
+            for (let y: number = 0; y < this.height; y++) {
+              for (let i: number = 0; i < 3; i++) {
+                for (let x: number = 0; x < this.width; x++) {
+                  const cellWalls = this.map[y][x].getWalls();
+                  if (i == 0) {
+                    mazeString += (cellWalls[Direction.Up]) ? '111' : '101';
+                  } else if (i == 1) {
+                    mazeString += (cellWalls[Direction.Left]) ? '1' : '0';
+                    mazeString += '0';
+                    mazeString += (cellWalls[Direction.Right]) ? '1' : '0';
+                  } else {
+                    mazeString += (cellWalls[Direction.Down]) ? '111' : '101';
+                  }
                 }
                 mazeString += '\n';
+              }
             }
-        }
-        console.log(mazeString);
+            console.log(mazeString);
+        */
     }
     printPath() {
         let path = [];
@@ -166,7 +166,7 @@ class Maze {
             deadend = false;
         }
         path.push(current);
-        console.log(path);
+        //console.log(path);
         for (const cell of path) {
             cell.setAsPath();
         }

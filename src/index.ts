@@ -124,7 +124,7 @@ class Maze {
         this.map[y][x].drawCell();
       }
     }
-
+/*
     let mazeString = '';
     for (let y: number = 0; y < this.height; y++) {
       for (let i: number = 0; i < 3; i++) {
@@ -144,7 +144,7 @@ class Maze {
       }
     }
     console.log(mazeString);
-
+*/
   }
 
   public printPath() {
@@ -186,7 +186,7 @@ class Maze {
       
     }
     path.push(current);
-    console.log(path);
+    //console.log(path);
     for (const cell of path) {
       cell.setAsPath();
     }
