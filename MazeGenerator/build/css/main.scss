@@ -8,9 +8,20 @@ body {
 	main {
 		font-family: "Poppins";
 		color: $primeColor;
-		
+		.maze-wrapper {
+			width: max-content;
+			left: 50%;
+			position: relative;
+			transform: translateX(-50%);
+			.path {
+				background-color: red;
+			}
+			*:first-child,
+			*:last-child {
+				background-color: #464646;
+			}
 			
-		
+		}
 		
 	}
 }

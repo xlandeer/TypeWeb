@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
+body {
+  background-color: #171717;
+}
+body main {
+  font-family: "Poppins";
+  color: #fff;
+}
+body main .maze-wrapper {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}
+body main .maze-wrapper .path {
+  background-color: red;
+}
+body main .maze-wrapper *:first-child,
+body main .maze-wrapper *:last-child {
+  background-color: #464646;
+}/*# sourceMappingURL=main.css.map */
