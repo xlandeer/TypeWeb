@@ -112,7 +112,7 @@ class Maze {
   private checkWalls(neighbours: { cell: Cell, direction: Direction }[]) {
     let ret: { cell: Cell, direction: Direction }[] = [];
     for (const neighbour of neighbours) {
-      if (neighbour.cell.getWalls()[neighbour.direction]) ret.push(neighbour);
+      if (!neighbour.cell.getWalls()[(neighbour.direction+2)%4]) ret.push(neighbour);
     }
     return ret;
   }
@@ -154,34 +154,44 @@ class Maze {
         cell.visited = false;
       });
     });
+
     path.push(this.map[0][0]);
     this.map[0][0].visited = true;
     let deadend: boolean = false;
     let current: Cell | undefined;
-    while (current?.getPosition().posX !== this.width - 1 && current?.getPosition().posY !== this.height - 1) {
+    while (
+      !(current?.getPosition().posX == this.width - 1 &&
+      current?.getPosition().posY == this.height - 1)
+    ) {
       while (!deadend) {
-
         current = path.pop();
 
         if (current) {
           let neighbours = this.checkWalls(this.getAvailableNeighbours(current));
           path.push(current);
           if (neighbours.length) {
-            let neighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+            let neighbour =
+              neighbours[Math.floor(Math.random() * neighbours.length)];
 
             neighbour.cell.visited = true;
             path.push(neighbour.cell);
           } else {
             deadend = true;
           }
-        }        
+        }
       }
+      
       path.pop();
       deadend = false;
+      
     }
+    path.push(current);
     console.log(path);
-
+    for (const cell of path) {
+      cell.setAsPath();
+    }
   }
+
 }
 class Cell {
   private div: HTMLElement = document.createElement('div');
@@ -204,6 +214,10 @@ class Cell {
 
   public getPosition() {
     return { posX: this.posX, posY: this.posY };
+  }
+
+  public setAsPath() {
+    this.div.className = "path";
   }
 
   public drawCell() {

@@ -17,4 +17,7 @@ body main .maze-wrapper {
 body main .maze-wrapper *:first-child,
 body main .maze-wrapper *:last-child {
   background-color: rgb(15, 71, 78);
+}
+body main .maze-wrapper .path {
+  background-color: red;
 }/*# sourceMappingURL=main.css.map */

@@ -101,7 +101,7 @@ class Maze {
     checkWalls(neighbours) {
         let ret = [];
         for (const neighbour of neighbours) {
-            if (neighbour.cell.getWalls()[neighbour.direction])
+            if (!neighbour.cell.getWalls()[(neighbour.direction + 2) % 4])
                 ret.push(neighbour);
         }
         return ret;
@@ -145,7 +145,8 @@ class Maze {
         this.map[0][0].visited = true;
         let deadend = false;
         let current;
-        while ((current === null || current === void 0 ? void 0 : current.getPosition().posX) !== this.width - 1 && (current === null || current === void 0 ? void 0 : current.getPosition().posY) !== this.height - 1) {
+        while (!((current === null || current === void 0 ? void 0 : current.getPosition().posX) == this.width - 1 &&
+            (current === null || current === void 0 ? void 0 : current.getPosition().posY) == this.height - 1)) {
             while (!deadend) {
                 current = path.pop();
                 if (current) {
@@ -161,11 +162,14 @@ class Maze {
                     }
                 }
             }
-            console.log(current);
             path.pop();
             deadend = false;
         }
+        path.push(current);
         console.log(path);
+        for (const cell of path) {
+            cell.setAsPath();
+        }
     }
 }
 class Cell {
@@ -186,6 +190,9 @@ class Cell {
     }
     getPosition() {
         return { posX: this.posX, posY: this.posY };
+    }
+    setAsPath() {
+        this.div.className = "path";
     }
     drawCell() {
         //   setTimeout(() => {
