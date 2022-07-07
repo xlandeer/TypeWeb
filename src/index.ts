@@ -240,7 +240,21 @@ class Cell {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  let maze = new Maze(15, 15);
-  maze.printMap();
-  maze.printPath();
+  let createBtn = document.querySelector('.controls-wrapper .create-btn');
+  if(createBtn) {
+    createBtn.addEventListener('click', () => {
+      const widthTextField: HTMLInputElement | null= document.querySelector('.controls-wrapper .width-input-wrapper #width-input');
+      const heightTextField: HTMLInputElement | null= document.querySelector('.controls-wrapper .height-input-wrapper #height-input');
+      if(widthTextField?.value && heightTextField?.value) {
+        document.querySelector('main .maze-wrapper')?.remove();
+        let maze = new Maze(parseInt(widthTextField.value), parseInt(heightTextField.value));
+        maze.printMap();
+        maze.printPath();
+      }
+      
+      
+    })
+  }
+    
+  
 });

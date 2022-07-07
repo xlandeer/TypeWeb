@@ -13,13 +13,14 @@ body {
 			left: 50%;
 			position: relative;
 			transform: translateX(-50%);
-			*:first-child,
-			*:last-child {
-				background-color: rgb(15, 71, 78);
-			}
 			.path {
 				background-color: red;
 			}
+			*:first-child,
+			*:last-child {
+				background-color: #FFF;
+			}
+			
 		}
 		
 	}

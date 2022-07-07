@@ -217,8 +217,19 @@ class Cell {
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
-    let maze = new Maze(15, 15);
-    maze.printMap();
-    maze.printPath();
+    let createBtn = document.querySelector('.controls-wrapper .create-btn');
+    if (createBtn) {
+        createBtn.addEventListener('click', () => {
+            var _a;
+            const widthTextField = document.querySelector('.controls-wrapper .width-input-wrapper #width-input');
+            const heightTextField = document.querySelector('.controls-wrapper .height-input-wrapper #height-input');
+            if ((widthTextField === null || widthTextField === void 0 ? void 0 : widthTextField.value) && (heightTextField === null || heightTextField === void 0 ? void 0 : heightTextField.value)) {
+                (_a = document.querySelector('main .maze-wrapper')) === null || _a === void 0 ? void 0 : _a.remove();
+                let maze = new Maze(parseInt(widthTextField.value), parseInt(heightTextField.value));
+                maze.printMap();
+                maze.printPath();
+            }
+        });
+    }
 });
 //# sourceMappingURL=index.js.map
