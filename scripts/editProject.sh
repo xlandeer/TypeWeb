@@ -7,5 +7,8 @@ if [ $# -eq 0 ]
         cp -r $1/css build
         cp -r $1/images build
         cp $1/index.html build
+        cp $1/index.js build
+        cp $1/index.js.map build
+
 fi
 
