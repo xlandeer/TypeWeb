@@ -26,14 +26,13 @@ class ListNode {
             localStorage.removeItem(this.id.toString());
             ListNode.nodeAmount--;
         });
-        check.addEventListener('change', () => {
+        check.addEventListener("change", () => {
             this.checked = !this.checked;
             localStorage.removeItem(this.id.toString());
             localStorage.setItem(this.id.toString(), JSON.stringify(this));
         });
         return { check, node, deleteBtn };
     }
-    // TODO: JSON representation implementation
     addElement(name, ...attributes) {
         let element = document.createElement(name);
         for (const attribute of attributes) {
@@ -49,7 +48,6 @@ class ListNode {
             localStorage.setItem(node.id.toString(), JSON.stringify(node));
         }
     }
-    ;
     static appendElements(parent, ...nodes) {
         for (const node of nodes) {
             parent.appendChild(node);
