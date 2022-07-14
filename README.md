@@ -21,3 +21,18 @@ $ /node_modules/.bin/tsc -p tsconfig.json
 ```sh
 $ node ./build/index.js 
 ```
+## Save Project ##
+### Example ###
+```sh
+$ scripts/saveProject.sh Checklist
+```
+## Edit Project ##
+### Example ###
+```sh
+$ scripts/editProject.sh release/Checklist
+```
+
+## New Project ##
+```sh
+$ scripts/newProject.sh
+```
