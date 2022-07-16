@@ -5,4 +5,24 @@ body {
 body main {
   font-family: "Poppins";
   color: #fff;
+}
+body main .dropdown {
+  border: 1px solid #fff;
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  position: relative;
+  display: inline-block;
+}
+body main .input-wrapper {
+  color: #fff;
+  display: none;
+  position: relative;
+  background-color: #171717;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+body main .dropdown:hover .input-wrapper {
+  display: block;
 }/*# sourceMappingURL=main.css.map */
