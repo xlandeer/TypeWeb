@@ -6,6 +6,7 @@ Partly learned from:
 * Project Ideas:
   - [x] Checklist
   - [x] Maze Generator
+  - [ ] Cocktail Database
   - [ ] Chess-Engine(Already begun)
   - [ ] Small scoped browser Game
 ## Setup ##
