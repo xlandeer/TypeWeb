@@ -57,7 +57,21 @@ class Cocktail {
     }
 
     static loadFromStorage() {
-        
+        $.ajax({
+            url: 'index.php',
+            type: 'GET',
+            data: {searchFilter: 'test'},
+            success: function (returnData) {
+                // let res = JSON.parse(returnData);
+                console.log(returnData);
+                
+            },
+            error: function (xhr, status, error) {
+                let errorMessage = xhr.status + ': ' + xhr.statusText;
+                console.log('Error - ' + errorMessage);
+            }
+        });
+
     }
 
     static saveToStorage(cocktail: Cocktail) {
@@ -68,7 +82,8 @@ class Cocktail {
         // }).catch(function(response) {
         //     console.log(response);
         // });
-        $.ajax('index.php', { // url where the data should be sent
+        $.ajax({
+            url: 'index.php',// url where the data should be sent
             type: 'POST',  // http method
 
             // all data || notation in JSON

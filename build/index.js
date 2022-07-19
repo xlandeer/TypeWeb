@@ -50,6 +50,19 @@ class Cocktail {
         this.parent.appendChild(cocktailWrapper);
     }
     static loadFromStorage() {
+        $.ajax({
+            url: 'index.php',
+            type: 'GET',
+            data: { searchFilter: 'test' },
+            success: function (returnData) {
+                // let res = JSON.parse(returnData);
+                console.log(returnData);
+            },
+            error: function (xhr, status, error) {
+                let errorMessage = xhr.status + ': ' + xhr.statusText;
+                console.log('Error - ' + errorMessage);
+            }
+        });
     }
     static saveToStorage(cocktail) {
         // $.ajax({
@@ -59,7 +72,8 @@ class Cocktail {
         // }).catch(function(response) {
         //     console.log(response);
         // });
-        $.ajax('index.php', {
+        $.ajax({
+            url: 'index.php',
             type: 'POST',
             // all data || notation in JSON
             data: { name: cocktail.name, imageUrl: cocktail.imgPath },

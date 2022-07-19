@@ -35,23 +35,37 @@
 		}
     }
 
-
-    
 	$sname = "127.0.0.1";
-    $uname = "root";
-    $pswd = "";
-    $dbname = "cocktail";
-    // connect to database
-    $cocktailname = $_POST["name"];
-    $imageurl = $_POST["imageUrl"];
-    //$ingredients = $_POST[ingredients];
+	$uname = "root";
+	$pswd = "";
+	$dbname = "cocktail";
 
-    $conn = connToDB($sname, $uname, $pswd, $dbname);
-    
-    $sql = "INSERT INTO cocktail(cocktail_name, image_url)";
-    $sql .= "VALUES('$cocktailname', '$imageurl')";
+	// connect to database	
+	$conn = connToDB($sname, $uname, $pswd, $dbname);
 
-    executeQuery($conn,$sql);
+   	$RequestMethod = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING);
+	if ( $RequestMethod === 'POST' && !empty($_POST)) {
+		$cocktailname = $_POST["name"];
+		$imageurl = $_POST["imageUrl"];
+		//$ingredients = $_POST[ingredients];
+
+		$sql = "INSERT INTO cocktail(cocktail_name, image_url)";
+		$sql .= "VALUES('$cocktailname', '$imageurl')";
+		executeQuery($conn, $sql);
+
+	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']))	{
+		$sql = 'SELECT cocktail_name, image_url FROM cocktail WHERE cocktail_name LIKE "%'.$_GET["searchFilter"].'%";';
+		
+		$searchRes = mysqli_query($conn, $sql);
+		var_dump($searchRes);
+	}else {
+		http_response_code(405); 
+		die();
+	}
     // end the connection
     mysqli_close($conn);	
+    
+
+    
+
 ?>
