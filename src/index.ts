@@ -61,12 +61,21 @@ class Cocktail {
     }
 
     static saveToStorage(cocktail: Cocktail) {
-		$.ajax({
-            method: "POST",
-            url: "index.php",
-            data: {name: cocktail.name, imageUrl: cocktail.imgPath}
-        }).catch(function(response) {
-            console.log(response);
+		// $.ajax({
+        //     method: "POST",
+        //     url: "index.php",
+        //     data: {name: cocktail.name, imageUrl: cocktail.imgPath}
+        // }).catch(function(response) {
+        //     console.log(response);
+        // });
+        $.ajax('index.php', { // url where the data should be sent
+            type: 'POST',  // http method
+
+            // all data || notation in JSON
+            data: { name: cocktail.name, imageUrl: cocktail.imgPath },
+            success: function (data, status, xhr) {
+                console.log(data);
+            }
         });
     }
 

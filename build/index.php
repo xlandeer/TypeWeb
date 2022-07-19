@@ -43,13 +43,13 @@
     $dbname = "cocktail";
     // connect to database
     $cocktailname = $_POST["name"];
-    $imageurl = $_POST["picture"];
+    $imageurl = $_POST["imageUrl"];
     //$ingredients = $_POST[ingredients];
 
     $conn = connToDB($sname, $uname, $pswd, $dbname);
     
-    $sql = "INSERT INTO Cocktail(cocktail_name, image_url)";
-    $sql .= "VALUES($cocktailname, $imageurl)";
+    $sql = "INSERT INTO cocktail(cocktail_name, image_url)";
+    $sql .= "VALUES('$cocktailname', '$imageurl')";
 
     executeQuery($conn,$sql);
     // end the connection

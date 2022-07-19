@@ -52,12 +52,20 @@ class Cocktail {
     static loadFromStorage() {
     }
     static saveToStorage(cocktail) {
-        $.ajax({
-            method: "POST",
-            url: "index.php",
-            data: { name: cocktail.name, imageUrl: cocktail.imgPath }
-        }).catch(function (response) {
-            console.log(response);
+        // $.ajax({
+        //     method: "POST",
+        //     url: "index.php",
+        //     data: {name: cocktail.name, imageUrl: cocktail.imgPath}
+        // }).catch(function(response) {
+        //     console.log(response);
+        // });
+        $.ajax('index.php', {
+            type: 'POST',
+            // all data || notation in JSON
+            data: { name: cocktail.name, imageUrl: cocktail.imgPath },
+            success: function (data, status, xhr) {
+                console.log(data);
+            }
         });
     }
     getIngredients() {
