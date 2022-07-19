@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/xlandeer/TypeWeb#readme",
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "@types/node": "^18.0.0",
     "tslint": "^6.1.3",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0"
   }
 }

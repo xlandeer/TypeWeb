@@ -28,7 +28,6 @@ class Cocktail {
         this.ingredients = ingredients;
         this.imgPath = imgPath;
         this.parent = parent;
-        this.id = ++Cocktail.amount;
         this.addRepresentation();
     }
     addRepresentation() {
@@ -51,20 +50,20 @@ class Cocktail {
         this.parent.appendChild(cocktailWrapper);
     }
     static loadFromStorage() {
-        for (const key in Object.assign({}, localStorage)) {
-            let objectStr = localStorage.getItem(key);
-            if (objectStr) {
-                let cocktailObject = JSON.parse(objectStr);
-                let ingredients = new IngredientMap(cocktailObject.ingredients.map);
-                let cocktail = new Cocktail(cocktailObject.name, ingredients, cocktailObject.imgPath, parentDOMElement);
-            }
-        }
+    }
+    static saveToStorage(cocktail) {
+        $.ajax({
+            method: "POST",
+            url: "index.php",
+            data: { name: cocktail.name, imageUrl: cocktail.imgPath }
+        }).catch(function (response) {
+            console.log(response);
+        });
     }
     getIngredients() {
         return this.ingredients;
     }
 }
-Cocktail.amount = 0;
 const cocktailName = document.querySelector('.input-wrapper .name');
 const cocktailPicture = document.querySelector('.input-wrapper #photo');
 const inputIngrName = document.querySelector('.input-wrapper .add-ingr-name');
@@ -86,7 +85,7 @@ let ingredients = new IngredientMap();
 (_b = document.querySelector('.input-wrapper .add-cocktail-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
     if (cocktailName.value && /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm.test(cocktailPicture.value)) {
         const newCocktail = new Cocktail(cocktailName.value, ingredients, cocktailPicture.value, parentDOMElement);
-        localStorage.setItem('C' + newCocktail.id, JSON.stringify(newCocktail));
+        Cocktail.saveToStorage(newCocktail);
         ingredients = new IngredientMap();
         cocktailName.value = '';
         cocktailPicture.value = '';
