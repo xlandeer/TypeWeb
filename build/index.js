@@ -49,14 +49,22 @@ class Cocktail {
         cocktailWrapper.appendChild(ingredients);
         this.parent.appendChild(cocktailWrapper);
     }
-    static loadFromStorage() {
+    static loadFromStorage(searchFilter = '') {
         $.ajax({
             url: 'index.php',
             type: 'GET',
-            data: { searchFilter: 'test' },
+            data: { searchFilter: searchFilter },
             success: function (returnData) {
                 // let res = JSON.parse(returnData);
-                console.log(returnData);
+                console.log(JSON.parse(returnData));
+                for (const element of JSON.parse(returnData)) {
+                    let newIngredients = new IngredientMap();
+                    for (const ingr of element.ingredients) {
+                        newIngredients.set(ingr.ingr_name, parseInt(ingr.ingr_amt));
+                    }
+                    const newCocktail = new Cocktail(element.name, newIngredients, element.imageUrl, parentDOMElement);
+                    console.log(newCocktail);
+                }
             },
             error: function (xhr, status, error) {
                 let errorMessage = xhr.status + ': ' + xhr.statusText;
@@ -76,7 +84,7 @@ class Cocktail {
             url: 'index.php',
             type: 'POST',
             // all data || notation in JSON
-            data: { name: cocktail.name, imageUrl: cocktail.imgPath },
+            data: { name: cocktail.name, imageUrl: cocktail.imgPath, ingredients: cocktail.ingredients },
             success: function (data, status, xhr) {
                 console.log(data);
             }

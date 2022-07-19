@@ -56,14 +56,22 @@ class Cocktail {
         this.parent.appendChild(cocktailWrapper);
     }
 
-    static loadFromStorage() {
+    static loadFromStorage(searchFilter: string = '') {
         $.ajax({
             url: 'index.php',
             type: 'GET',
-            data: {searchFilter: 'test'},
+            data: {searchFilter: searchFilter},
             success: function (returnData) {
-                // let res = JSON.parse(returnData);
-                console.log(returnData);
+                              
+                for (const element of JSON.parse(returnData)) {
+                    let newIngredients = new IngredientMap();
+                    for (const ingr of element.ingredients) {
+                        newIngredients.set(ingr.ingr_name, parseInt(ingr.ingr_amt));
+                    }
+                    const newCocktail: Cocktail = new Cocktail(element.name, newIngredients as IngredientMap, element.imageUrl, parentDOMElement);                    
+                    console.log(newCocktail);
+                    
+                }                
                 
             },
             error: function (xhr, status, error) {
@@ -87,7 +95,7 @@ class Cocktail {
             type: 'POST',  // http method
 
             // all data || notation in JSON
-            data: { name: cocktail.name, imageUrl: cocktail.imgPath },
+            data: { name: cocktail.name, imageUrl: cocktail.imgPath, ingredients:cocktail.ingredients },
             success: function (data, status, xhr) {
                 console.log(data);
             }
