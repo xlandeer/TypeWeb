@@ -69,7 +69,6 @@ class Cocktail {
                         newIngredients.set(ingr.ingr_name, parseInt(ingr.ingr_amt));
                     }
                     const newCocktail: Cocktail = new Cocktail(element.name, newIngredients as IngredientMap, element.imageUrl, parentDOMElement);                    
-                    console.log(newCocktail);
                     
                 }                
                 
