@@ -95,7 +95,7 @@ const cocktailName = document.querySelector('.input-wrapper .name');
 const cocktailPicture = document.querySelector('.input-wrapper #photo');
 const inputIngrName = document.querySelector('.input-wrapper .add-ingr-name');
 const inputIngrAmt = document.querySelector('.input-wrapper .add-ingr-amt');
-const parentDOMElement = document.querySelector('.cocktail-wrapper');
+const parentDOMElement = document.querySelector('.cocktail-section');
 const ingredientWrapper = document.querySelector('.input-wrapper .ingredient-wrapper');
 let ingredients = new IngredientMap();
 (_a = document.querySelector('.input-wrapper .add-ingr-btn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {

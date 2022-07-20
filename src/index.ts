@@ -111,7 +111,7 @@ const cocktailPicture = document.querySelector('.input-wrapper #photo') as HTMLI
 const inputIngrName = document.querySelector('.input-wrapper .add-ingr-name') as HTMLInputElement;
 const inputIngrAmt = document.querySelector('.input-wrapper .add-ingr-amt') as HTMLInputElement;
 
-const parentDOMElement = document.querySelector('.cocktail-wrapper') as HTMLDivElement;
+const parentDOMElement = document.querySelector('.cocktail-section') as HTMLDivElement;
 const ingredientWrapper = document.querySelector('.input-wrapper .ingredient-wrapper') as HTMLDivElement;
 let ingredients = new IngredientMap();
 
