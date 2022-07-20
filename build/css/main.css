@@ -10,9 +10,11 @@ body main {
 body main .dropdown {
   border: 1px solid #fff;
   border-radius: 20px;
-  padding: 0.5rem 1.2rem;
   position: relative;
   display: inline-block;
+  /* Style the button */
+  /* Show hidden content when the checkbox is checked */
+  /* Style the button when the checkbox is checked */
 }
 body main .dropdown .input-wrapper {
   color: #fff;
@@ -22,7 +24,16 @@ body main .dropdown .input-wrapper {
   min-width: 160px;
   z-index: 1;
 }
-body main .dropdown:hover .input-wrapper {
+body main .dropdown #expand-btn {
+  width: 100%;
+  padding: 5px 11px;
+  transform: translateY(-40%);
+  font-size: x-large;
+}
+body main .dropdown #expand-toggle {
+  visibility: hidden;
+}
+body main .dropdown #expand-toggle:checked ~ #inputwrapper {
   display: block;
 }
 body main .search-wrapper {

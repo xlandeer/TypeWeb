@@ -14,7 +14,6 @@ body {
 		.dropdown {
 			border: 1px solid $primeColor;
 			border-radius: 20px;
-			padding: 0.5rem 1.2rem;
 			position: relative;
 			display: inline-block;
 			.input-wrapper {
@@ -25,9 +24,26 @@ body {
 				min-width: 160px;
 				z-index: 1;
 			}
-			&:hover .input-wrapper {
+			/* Style the button */
+			#expand-btn {
+				width: 100%;
+				padding: 5px 11px;
+				transform: translateY(-40%);
+				font-size:x-large;
+			}
+			#expand-toggle {
+				visibility: hidden;
+			}
+			/* Show hidden content when the checkbox is checked */
+			#expand-toggle:checked ~ #inputwrapper {
 				display: block;
 			}
+				
+			/* Style the button when the checkbox is checked */
+
+			// &:hover .input-wrapper {
+			// 	display: block;
+			// }
 		}
 		.search-wrapper{
 			padding: 15px 0 0;
