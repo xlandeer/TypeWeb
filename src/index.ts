@@ -144,11 +144,11 @@ let ingredients = new IngredientMap();
 
 const cocktailFilter = document.querySelector('.search-wrapper .cocktail-filter') as HTMLInputElement;
 
-document.querySelector('.btn-cocktail-filter')?.addEventListener('click', () => {
-    if(cocktailFilter.value) {
-        Cocktail.loadFromStorage(cocktailFilter.value);
-    }
+cocktailFilter.addEventListener('input', (event: any) => { 
+    Cocktail.loadFromStorage(cocktailFilter.value);
+
 })
+
 
 document.querySelector('.input-wrapper .add-ingr-btn')?.addEventListener('click', () => {
     if (inputIngrName.value && /^[0-9]+$/g.test(inputIngrAmt.value) && selectIngrMeasure.value) {

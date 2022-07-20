@@ -29,7 +29,28 @@ body {
 				display: block;
 			}
 		}
-				
+		.search-wrapper{
+			padding: 15px 0 0;
+			margin-top: 10px;
+			
+			.cocktail-filter {
+				font-family: inherit;
+				width: 100%;
+				border: 0;
+				border-bottom: 2px solid $primeColor;
+				outline: 0;
+				font-size: 1.3rem;
+				color: $primeColor;
+				padding: 7px 0;
+				background: transparent;
+				transition: border-color 0.2s;
+			  
+				&::placeholder {
+				  color: $primeColor;
+				}
+			
+			}
+		}
 		.cocktail-section {
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);

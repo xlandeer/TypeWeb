@@ -25,6 +25,31 @@ body main .dropdown .input-wrapper {
 body main .dropdown:hover .input-wrapper {
   display: block;
 }
+body main .search-wrapper {
+  padding: 15px 0 0;
+  margin-top: 10px;
+}
+body main .search-wrapper .cocktail-filter {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid #fff;
+  outline: 0;
+  font-size: 1.3rem;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+body main .search-wrapper .cocktail-filter::-moz-placeholder {
+  color: #fff;
+}
+body main .search-wrapper .cocktail-filter:-ms-input-placeholder {
+  color: #fff;
+}
+body main .search-wrapper .cocktail-filter::placeholder {
+  color: #fff;
+}
 body main .cocktail-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

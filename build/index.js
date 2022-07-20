@@ -98,7 +98,7 @@ class Cocktail {
         //     data: {name: cocktail.name, imageUrl: cocktail.imgPath}
         // }).catch(function(response) {
         //     console.log(response);
-        // });
+        // });  
         $.ajax({
             url: 'index.php',
             type: 'POST',
@@ -122,10 +122,12 @@ const parentDOMElement = document.querySelector('.cocktail-section');
 const ingredientWrapper = document.querySelector('.input-wrapper .ingredient-wrapper');
 let ingredients = new IngredientMap();
 const cocktailFilter = document.querySelector('.search-wrapper .cocktail-filter');
+cocktailFilter.addEventListener('input', (event) => {
+    Cocktail.loadFromStorage(cocktailFilter.value);
+});
 (_a = document.querySelector('.btn-cocktail-filter')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
     if (cocktailFilter.value) {
         Cocktail.loadFromStorage(cocktailFilter.value);
-        cocktailFilter.value = '';
     }
 });
 (_b = document.querySelector('.input-wrapper .add-ingr-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
