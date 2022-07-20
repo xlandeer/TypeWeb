@@ -114,7 +114,7 @@ class Cocktail {
         //     data: {name: cocktail.name, imageUrl: cocktail.imgPath}
         // }).catch(function(response) {
         //     console.log(response);
-        // });
+        // });  
         $.ajax({
             url: 'index.php',// url where the data should be sent
             type: 'POST',  // http method
@@ -147,7 +147,6 @@ const cocktailFilter = document.querySelector('.search-wrapper .cocktail-filter'
 document.querySelector('.btn-cocktail-filter')?.addEventListener('click', () => {
     if(cocktailFilter.value) {
         Cocktail.loadFromStorage(cocktailFilter.value);
-        cocktailFilter.value = '';
     }
 })
 

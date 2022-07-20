@@ -2,12 +2,12 @@
 
 
     function createTables($conn) {
-        $sql = "CREATE TABLE Cocktail(id INT PRIMARY KEY AUTO_INCREMENT, cocktail_name varchar(50), image_url varchar(100))";
+        $sql = "CREATE TABLE cocktail(id INT PRIMARY KEY AUTO_INCREMENT, cocktail_name varchar(50), image_url varchar(100))";
         executeQuery($conn,$sql);
-        $sql = "CREATE TABLE Ingredients(cocktail_id INT, ingr_name VARCHAR(50), ingr_amt INT, ingr_measure VARCHAR(10)";
+        $sql = "CREATE TABLE ingredients(cocktail_id INT, ingr_name VARCHAR(50), ingr_amt INT, ingr_measure VARCHAR(10)";
         $sql .= "CONSTRAINT PK_Cocktail PRIMARY KEY (cocktail_id, ingr_name));";
         executeQuery($conn,$sql);
-        $sql = "ALTER TABLE Ingredients ";
+        $sql = "ALTER TABLE ingredients ";
         $sql .= "ADD CONSTRAINT FK_COCKTAIL_ID FOREIGN KEY (cocktail_id) REFERENCES Cocktail(id) ";
         $sql .= "ON DELETE CASCADE;";
         executeQuery($conn,$sql);
