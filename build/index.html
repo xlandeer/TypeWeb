@@ -12,13 +12,10 @@
     <div class="container">
       <div class="row">
         <h1 class="headline text-center">Cocktails</h1>
-        <div class="dropdown">
+        <div class="dropdown text-center">
           <span>Add New Cocktail</span>
-          <div class="input-wrapper">
-            <span>
-              Image Upload
-              <input id="photo" type="url" name="photo">
-            </span>
+          <div class="input-wrapper text-center">
+            <!-- 
             <label for="name">Name</label>
             <input type="text" class="name col-sm">
             <label class="col-5">Ingredient</label>
@@ -27,7 +24,35 @@
             <input type="number" class="add-ingr-amt col-5"> 
             <button class="add-ingr-btn">Add</button> 
             <div class="ingredient-wrapper col-12 my-3"></div>
-            <button class="add-cocktail-btn col-10 my-3">Add Cocktail</button>
+            <button class="add-cocktail-btn col-10 my-3">Add Cocktail</button> -->
+
+            <div>
+              <span>
+                Image Upload
+                <input class="col-8" id="photo" type="url" name="photo">
+              </span>
+            </div>
+
+            <div>
+              <label for="name">Cocktail Name</label>
+              <input class="name col-8" type="text">
+            </div>
+
+            <div>
+              <input class="add-ingr-name col-4 mt-4" type="text" placeholder="Ingredient" required>
+              <input class="add-ingr-amt col-4 mt-4" type="number" placeholder="Amount" required>
+              <select name="Measurement" class="meas-select">
+                <option value="ml">ml</option>
+                <option value="oz">oz</option>
+                <option value="slices">Slices</option>
+                <option value="times">x</option>
+              </select>
+              <button class="add-ingr-btn">Add</button>
+            </div>
+            <div class="ingredient-wrapper my-2"></div>
+            <div>
+              <button class="add-cocktail-btn col-12">Add Cocktiail</button>
+            </div>
           </div>
         </div>
       
