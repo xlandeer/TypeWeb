@@ -59,7 +59,6 @@ class Cocktail {
         const copy = this;
         deleteBtn.addEventListener('click',() => {
             Cocktail.deleteFromStorage(copy);
-            Cocktail.loadFromStorage();
         });
         cocktailWrapper.appendChild(image);
         cocktailWrapper.appendChild(nameLabel);
@@ -103,7 +102,7 @@ class Cocktail {
             // all data || notation in JSON
             data: { intention: "delete", id: cocktail.id},
             success: function (data, status, xhr) {
-                console.log(data);
+                Cocktail.loadFromStorage();
             }
         });
     }
@@ -123,7 +122,7 @@ class Cocktail {
             // all data || notation in JSON
             data: { intention: "save", name: cocktail.name, imageUrl: cocktail.imgPath, ingredients:cocktail.ingredients },
             success: function (data, status, xhr) {
-                // this.addRepresentation();
+                Cocktail.loadFromStorage();
             }
         });
     }
@@ -170,7 +169,6 @@ document.querySelector('.input-wrapper .add-cocktail-btn')?.addEventListener('cl
         const newCocktail: Cocktail = new Cocktail(cocktailName.value, ingredients, cocktailPicture.value, parentDOMElement);
 
         Cocktail.saveToStorage(newCocktail);
-        Cocktail.loadFromStorage();
         ingredients = new IngredientMap();
         cocktailName.value = '';
         cocktailPicture.value = '';

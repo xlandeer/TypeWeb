@@ -49,7 +49,6 @@ class Cocktail {
         const copy = this;
         deleteBtn.addEventListener('click', () => {
             Cocktail.deleteFromStorage(copy);
-            Cocktail.loadFromStorage();
         });
         cocktailWrapper.appendChild(image);
         cocktailWrapper.appendChild(nameLabel);
@@ -88,7 +87,7 @@ class Cocktail {
             // all data || notation in JSON
             data: { intention: "delete", id: cocktail.id },
             success: function (data, status, xhr) {
-                console.log(data);
+                Cocktail.loadFromStorage();
             }
         });
     }
@@ -106,7 +105,7 @@ class Cocktail {
             // all data || notation in JSON
             data: { intention: "save", name: cocktail.name, imageUrl: cocktail.imgPath, ingredients: cocktail.ingredients },
             success: function (data, status, xhr) {
-                // this.addRepresentation();
+                Cocktail.loadFromStorage();
             }
         });
     }
@@ -144,7 +143,6 @@ const cocktailFilter = document.querySelector('.search-wrapper .cocktail-filter'
     if (cocktailName.value && /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm.test(cocktailPicture.value)) {
         const newCocktail = new Cocktail(cocktailName.value, ingredients, cocktailPicture.value, parentDOMElement);
         Cocktail.saveToStorage(newCocktail);
-        Cocktail.loadFromStorage();
         ingredients = new IngredientMap();
         cocktailName.value = '';
         cocktailPicture.value = '';
