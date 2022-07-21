@@ -1,3 +1,5 @@
+
+
 type Amount = { amt: number; measure: string };
 namespace Utils {
   export function appendElements(
@@ -14,6 +16,23 @@ namespace Utils {
       element.setAttribute(attribute[0], attribute[1]);
     }
     return element;
+  }
+
+  export async function uploadFile() {
+    let formData = new FormData();
+    let files = imageUpload.files;
+    
+    
+    if(files){
+      formData.append("file",files[0]);
+
+      const response = await fetch('upload.php', {
+        method: "POST",
+        body: formData
+      });
+      //console.log(await response);
+
+    }
   }
 }
 
@@ -77,15 +96,18 @@ class Cocktail {
     Utils.appendElements(this.parent,cocktailWrapper);
   }
 
-  static loadFromStorage(searchFilter: string = "") {
+  static loadFromStorage(attr: string = "cocktail_name",searchFilter: string = "") {
     $.ajax({
       url: "index.php",
       type: "GET",
-      data: { searchFilter: searchFilter },
+      data: { attribute: attr, searchFilter: searchFilter },
       success: function (returnData) {
+
+        
         parentDOMElement.innerHTML = "";
         if (returnData) {
           for (const element of JSON.parse(returnData)) {
+            
             let newIngredients = new IngredientMap();
             for (const ingr of element.ingredients) {
               newIngredients.set(ingr.ingr_name, {
@@ -117,7 +139,7 @@ class Cocktail {
       type: "POST", // http method
 
       // all data || notation in JSON
-      data: { intention: "delete", id: cocktail.id },
+      data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath},
       success: function (data, status, xhr) {
         Cocktail.loadFromStorage();
       },
@@ -157,9 +179,6 @@ class Cocktail {
 const cocktailName = document.querySelector(
   ".input-wrapper .name"
 ) as HTMLInputElement;
-const cocktailPicture = document.querySelector(
-  ".input-wrapper #photo"
-) as HTMLInputElement;
 const inputIngrName = document.querySelector(
   ".input-wrapper .add-ingr-name"
 ) as HTMLInputElement;
@@ -183,9 +202,20 @@ const cocktailFilter = document.querySelector(
   ".search-wrapper .cocktail-filter"
 ) as HTMLInputElement;
 
+const attributeToSearch = document.querySelector(
+  ".search-wrapper .search-for-select"
+) as HTMLSelectElement;
+
+const imageUpload = document.querySelector(
+  ".input-wrapper #image-upload"
+) as HTMLInputElement;
+
 cocktailFilter.addEventListener("input", (event: any) => {
-  Cocktail.loadFromStorage(cocktailFilter.value);
+  Cocktail.loadFromStorage(attributeToSearch.value,cocktailFilter.value);
 });
+attributeToSearch.addEventListener('change', () => {
+  Cocktail.loadFromStorage(attributeToSearch.value,cocktailFilter.value);
+})
 
 document.querySelector(".input-wrapper .add-ingr-btn")
   ?.addEventListener("click", () => {
@@ -209,26 +239,28 @@ document.querySelector(".input-wrapper .add-ingr-btn")
   });
 
 document.querySelector(".input-wrapper .add-cocktail-btn")
-  ?.addEventListener("click", () => {
-    if (
-      cocktailName.value &&
-      /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm.test(
-        cocktailPicture.value
-      )
-    ) {
-      const newCocktail: Cocktail = new Cocktail(
-        cocktailName.value,
-        ingredients,
-        cocktailPicture.value,
-        parentDOMElement
-      );
+  ?.addEventListener("click", async () => {
+    Utils.uploadFile().then(() => {
+      let imagePath = "ERROR";
+      if(imageUpload.files) {
+        imagePath = "images/" + imageUpload.files[0].name;
+      }
+      if (cocktailName.value && imagePath) {
+        const newCocktail: Cocktail = new Cocktail(
+          cocktailName.value,
+          ingredients,
+          imagePath,
+          parentDOMElement
+        );
 
-      Cocktail.saveToStorage(newCocktail);
-      ingredients = new IngredientMap();
-      cocktailName.value = "";
-      cocktailPicture.value = "";
-      ingredientWrapper.innerHTML = "";
-    }
+        Cocktail.saveToStorage(newCocktail);
+        ingredients = new IngredientMap();
+        cocktailName.value = "";
+        ingredientWrapper.innerHTML = "";
+      }
+      
+    });
+    
   });
 
 document.addEventListener("DOMContentLoaded", () => {

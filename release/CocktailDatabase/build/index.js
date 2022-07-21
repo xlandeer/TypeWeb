@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var _a, _b;
 var Utils;
 (function (Utils) {
@@ -16,6 +25,21 @@ var Utils;
         return element;
     }
     Utils.createElementWithAttributes = createElementWithAttributes;
+    function uploadFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let formData = new FormData();
+            let files = imageUpload.files;
+            if (files) {
+                formData.append("file", files[0]);
+                const response = yield fetch('upload.php', {
+                    method: "POST",
+                    body: formData
+                });
+                //console.log(await response);
+            }
+        });
+    }
+    Utils.uploadFile = uploadFile;
 })(Utils || (Utils = {}));
 class IngredientMap {
     constructor(map = {}) {
@@ -71,11 +95,11 @@ class Cocktail {
         Utils.appendElements(cocktailWrapper, image, nameLabel, ingredients, deleteBtn);
         Utils.appendElements(this.parent, cocktailWrapper);
     }
-    static loadFromStorage(searchFilter = "") {
+    static loadFromStorage(attr = "cocktail_name", searchFilter = "") {
         $.ajax({
             url: "index.php",
             type: "GET",
-            data: { searchFilter: searchFilter },
+            data: { attribute: attr, searchFilter: searchFilter },
             success: function (returnData) {
                 parentDOMElement.innerHTML = "";
                 if (returnData) {
@@ -103,7 +127,7 @@ class Cocktail {
             url: "index.php",
             type: "POST",
             // all data || notation in JSON
-            data: { intention: "delete", id: cocktail.id },
+            data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath },
             success: function (data, status, xhr) {
                 Cocktail.loadFromStorage();
             },
@@ -137,7 +161,6 @@ class Cocktail {
     }
 }
 const cocktailName = document.querySelector(".input-wrapper .name");
-const cocktailPicture = document.querySelector(".input-wrapper #photo");
 const inputIngrName = document.querySelector(".input-wrapper .add-ingr-name");
 const inputIngrAmt = document.querySelector(".input-wrapper .add-ingr-amt");
 const selectIngrMeasure = document.querySelector(".input-wrapper .meas-select");
@@ -145,8 +168,13 @@ const parentDOMElement = document.querySelector(".cocktail-section");
 const ingredientWrapper = document.querySelector(".input-wrapper .ingredient-wrapper");
 let ingredients = new IngredientMap();
 const cocktailFilter = document.querySelector(".search-wrapper .cocktail-filter");
+const attributeToSearch = document.querySelector(".search-wrapper .search-for-select");
+const imageUpload = document.querySelector(".input-wrapper #image-upload");
 cocktailFilter.addEventListener("input", (event) => {
-    Cocktail.loadFromStorage(cocktailFilter.value);
+    Cocktail.loadFromStorage(attributeToSearch.value, cocktailFilter.value);
+});
+attributeToSearch.addEventListener('change', () => {
+    Cocktail.loadFromStorage(attributeToSearch.value, cocktailFilter.value);
 });
 (_a = document.querySelector(".input-wrapper .add-ingr-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
     if (inputIngrName.value &&
@@ -164,17 +192,21 @@ cocktailFilter.addEventListener("input", (event) => {
         inputIngrAmt.value = "";
     }
 });
-(_b = document.querySelector(".input-wrapper .add-cocktail-btn")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
-    if (cocktailName.value &&
-        /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm.test(cocktailPicture.value)) {
-        const newCocktail = new Cocktail(cocktailName.value, ingredients, cocktailPicture.value, parentDOMElement);
-        Cocktail.saveToStorage(newCocktail);
-        ingredients = new IngredientMap();
-        cocktailName.value = "";
-        cocktailPicture.value = "";
-        ingredientWrapper.innerHTML = "";
-    }
-});
+(_b = document.querySelector(".input-wrapper .add-cocktail-btn")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+    Utils.uploadFile().then(() => {
+        let imagePath = "ERROR";
+        if (imageUpload.files) {
+            imagePath = "images/" + imageUpload.files[0].name;
+        }
+        if (cocktailName.value && imagePath) {
+            const newCocktail = new Cocktail(cocktailName.value, ingredients, imagePath, parentDOMElement);
+            Cocktail.saveToStorage(newCocktail);
+            ingredients = new IngredientMap();
+            cocktailName.value = "";
+            ingredientWrapper.innerHTML = "";
+        }
+    });
+}));
 document.addEventListener("DOMContentLoaded", () => {
     Cocktail.loadFromStorage();
 });

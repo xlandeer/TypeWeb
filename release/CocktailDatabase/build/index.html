@@ -19,7 +19,7 @@
             <div>
               <span>
                 Image Upload
-                <input class="col-8" id="photo" type="url" name="photo">
+                <input class="col-8" id="image-upload" type="file" name="image-upload">
               </span>
             </div>
 
@@ -48,6 +48,10 @@
 
         <div class="search-wrapper text-center my-2">
           <input type="search" class="cocktail-filter" placeholder="Search...">
+          <Select class="search-for-select">
+            <option value="cocktail_name">Cocktail Name</option>
+            <option value="ingr_name">Ingredient</option>
+          </Select>
         </div>
         
         <div class="cocktail-section col-12">

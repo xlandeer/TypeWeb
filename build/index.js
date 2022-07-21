@@ -31,26 +31,12 @@ var Utils;
             let files = imageUpload.files;
             if (files) {
                 formData.append("file", files[0]);
-                console.log(files[0]);
                 const response = yield fetch('upload.php', {
                     method: "POST",
                     body: formData
                 });
-                const filePath = yield response;
-                console.log(filePath.text());
-                ;
-                // let name = files[0].name;
-                // fetch('upload.php', {
-                //   method: "POST",
-                //   body: formData
-                // })
-                // .then(response => response.json())
-                // .then(data =>  {
-                //   console.log(data);
-                //   return name;
-                // });
+                //console.log(await response);
             }
-            // return null;
         });
     }
     Utils.uploadFile = uploadFile;
@@ -141,7 +127,7 @@ class Cocktail {
             url: "index.php",
             type: "POST",
             // all data || notation in JSON
-            data: { intention: "delete", id: cocktail.id },
+            data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath },
             success: function (data, status, xhr) {
                 Cocktail.loadFromStorage();
             },
@@ -207,8 +193,7 @@ attributeToSearch.addEventListener('change', () => {
     }
 });
 (_b = document.querySelector(".input-wrapper .add-cocktail-btn")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
-    Utils.uploadFile().then(response => {
-        console.log(response);
+    Utils.uploadFile().then(() => {
         let imagePath = "ERROR";
         if (imageUpload.files) {
             imagePath = "images/" + imageUpload.files[0].name;

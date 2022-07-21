@@ -37,3 +37,8 @@ $ scripts/editProject.sh release/Checklist
 ```sh
 $ scripts/newProject.sh
 ```
+
+## Setup Database ##
+```sh
+$ php build/dbSetup.php
+```

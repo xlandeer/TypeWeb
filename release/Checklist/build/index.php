@@ -1,19 +1,5 @@
 <?php
 
-
-    function createTables($conn) {
-        $sql = "CREATE TABLE cocktail(id INT PRIMARY KEY AUTO_INCREMENT, cocktail_name varchar(50), image_url varchar(100))";
-        executeQuery($conn,$sql);
-        $sql = "CREATE TABLE ingredients(cocktail_id INT, ingr_name VARCHAR(50), ingr_amt INT, ingr_measure VARCHAR(10)";
-        $sql .= "CONSTRAINT PK_Cocktail PRIMARY KEY (cocktail_id, ingr_name));";
-        executeQuery($conn,$sql);
-        $sql = "ALTER TABLE ingredients ";
-        $sql .= "ADD CONSTRAINT FK_COCKTAIL_ID FOREIGN KEY (cocktail_id) REFERENCES Cocktail(id) ";
-        $sql .= "ON DELETE CASCADE;";
-        executeQuery($conn,$sql);
-        
-    }
-
     function executeQuery($conn, $sql) {
         if (mysqli_query($conn, $sql)) {
             echo "New record created successfully";
@@ -43,6 +29,9 @@
 	// connect to database	
 	$conn = connToDB($sname, $uname, $pswd, $dbname);
 
+	// If database is not setup:
+	// createTables($conn);
+
    	$RequestMethod = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING);
 	if ( $RequestMethod === 'POST' && !empty($_POST)) {
 		if($_POST["intention"] == "save") {
@@ -70,12 +59,15 @@
 		}else {
 			$id = $_POST['id'];
 			$sql = "DELETE FROM cocktail WHERE id = $id";
+			unlink($_POST['imgPath']);
 			executeQuery($conn, $sql);
 		}
 
-	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']))	{
+	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']) && isset($_GET['attribute']))	{
         $results = [];
-        $sql = 'SELECT id, cocktail_name, image_url FROM cocktail WHERE cocktail_name LIKE "%'.$_GET["searchFilter"].'%";';
+		$attr = $_GET['attribute'] == "ingr_name" ? "i.ingr_name" : "c.cocktail_name";
+
+        $sql = 'SELECT c.id, c.cocktail_name, c.image_url FROM cocktail c LEFT JOIN ingredients i ON c.id = i.cocktail_id WHERE '.$_GET["attribute"].' LIKE "%'.$_GET["searchFilter"].'%" GROUP BY c.cocktail_name;';
 		$searchRes = mysqli_query($conn, $sql);
 		if ($searchRes->num_rows > 0) {
 			

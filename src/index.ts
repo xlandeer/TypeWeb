@@ -25,29 +25,14 @@ namespace Utils {
     
     if(files){
       formData.append("file",files[0]);
-      console.log(files[0]);
+
       const response = await fetch('upload.php', {
         method: "POST",
         body: formData
       });
-      const filePath = await response;
-      console.log(filePath.text());
-      ;
-      // let name = files[0].name;
-      // fetch('upload.php', {
-        
-      //   method: "POST",
-      //   body: formData
-      // })
-      // .then(response => response.json())
-      // .then(data =>  {
-      //   console.log(data);
-      //   return name;
-      // });
+      //console.log(await response);
 
-      
     }
-    // return null;
   }
 }
 
@@ -154,7 +139,7 @@ class Cocktail {
       type: "POST", // http method
 
       // all data || notation in JSON
-      data: { intention: "delete", id: cocktail.id },
+      data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath},
       success: function (data, status, xhr) {
         Cocktail.loadFromStorage();
       },
@@ -255,8 +240,7 @@ document.querySelector(".input-wrapper .add-ingr-btn")
 
 document.querySelector(".input-wrapper .add-cocktail-btn")
   ?.addEventListener("click", async () => {
-    Utils.uploadFile().then(response => {
-      console.log(response);
+    Utils.uploadFile().then(() => {
       let imagePath = "ERROR";
       if(imageUpload.files) {
         imagePath = "images/" + imageUpload.files[0].name;
