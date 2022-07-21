@@ -11,7 +11,7 @@ Partly learned from:
   - [ ] Small scoped browser Game
   
 # Requirements #
-* Apache2 WebServer and MySQLServer(e.g. XAMPP -> https://www.apachefriends.org/de/index.html)
+* Apache2 WebServer and MySQLServer(e.g. [**XAMPP**](https://www.apachefriends.org/de/index.html))
 
 
 ## Setup ##
