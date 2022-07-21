@@ -9,6 +9,11 @@ Partly learned from:
   - [ ] Cocktail Database
   - [ ] Chess-Engine(Already begun)
   - [ ] Small scoped browser Game
+  
+# Requirements #
+* WebServer and MySQLServer(e.g. XAMPP)
+
+
 ## Setup ##
 ```sh
 $ npm init
