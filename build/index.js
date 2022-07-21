@@ -1,5 +1,5 @@
 "use strict";
-var _a, _b, _c;
+var _a, _b;
 class IngredientMap {
     constructor(map = {}) {
         this.map = map;
@@ -39,7 +39,9 @@ class Cocktail {
         let nameLabel = document.createElement('h2');
         nameLabel.textContent = this.name;
         let ingredients = document.createElement('ul');
-        let deleteBtn = document.createElement('button');
+        let deleteBtn = document.createElement('input');
+        deleteBtn.setAttribute("type", "image");
+        deleteBtn.setAttribute("src", "images/x_btn.svg");
         let iterator = this.ingredients.generateIterator();
         for (const ingredrient of iterator) {
             let ingredient = document.createElement('li');
@@ -125,12 +127,7 @@ const cocktailFilter = document.querySelector('.search-wrapper .cocktail-filter'
 cocktailFilter.addEventListener('input', (event) => {
     Cocktail.loadFromStorage(cocktailFilter.value);
 });
-(_a = document.querySelector('.btn-cocktail-filter')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
-    if (cocktailFilter.value) {
-        Cocktail.loadFromStorage(cocktailFilter.value);
-    }
-});
-(_b = document.querySelector('.input-wrapper .add-ingr-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
+(_a = document.querySelector('.input-wrapper .add-ingr-btn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
     if (inputIngrName.value && /^[0-9]+$/g.test(inputIngrAmt.value) && selectIngrMeasure.value) {
         // store ingredient in map
         ingredients.set(inputIngrName.value, { amt: parseInt(inputIngrAmt.value), measure: selectIngrMeasure.value });
@@ -141,7 +138,7 @@ cocktailFilter.addEventListener('input', (event) => {
         inputIngrAmt.value = '';
     }
 });
-(_c = document.querySelector('.input-wrapper .add-cocktail-btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', () => {
+(_b = document.querySelector('.input-wrapper .add-cocktail-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
     if (cocktailName.value && /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm.test(cocktailPicture.value)) {
         const newCocktail = new Cocktail(cocktailName.value, ingredients, cocktailPicture.value, parentDOMElement);
         Cocktail.saveToStorage(newCocktail);

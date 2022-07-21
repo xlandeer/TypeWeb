@@ -49,7 +49,9 @@ class Cocktail {
         let nameLabel = document.createElement('h2');
         nameLabel.textContent = this.name;
         let ingredients = document.createElement('ul');
-        let deleteBtn = document.createElement('button');
+        let deleteBtn = document.createElement('input');
+        deleteBtn.setAttribute("type","image");
+        deleteBtn.setAttribute("src","images/x_btn.svg");
         let iterator = this.ingredients.generateIterator();
         for (const ingredrient of iterator) {
             let ingredient = document.createElement('li');
