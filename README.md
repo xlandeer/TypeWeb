@@ -17,7 +17,7 @@ Partly learned from:
 ## Setup ##
 ```sh
 $ npm init
-$ npm install --save-dev typescript tslint @types/node
+$ npm install --save-dev typescript tslint @types/node @types/jquery
 ```
 ## Compile ##
 ```sh
