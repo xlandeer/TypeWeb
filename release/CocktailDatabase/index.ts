@@ -77,18 +77,15 @@ class Cocktail {
     Utils.appendElements(this.parent,cocktailWrapper);
   }
 
-  static loadFromStorage(attr: string = "cocktail_name",searchFilter: string = "") {
+  static loadFromStorage(searchFilter: string = "") {
     $.ajax({
       url: "index.php",
       type: "GET",
-      data: { attribute: attr, searchFilter: searchFilter },
+      data: { searchFilter: searchFilter },
       success: function (returnData) {
-
-        
         parentDOMElement.innerHTML = "";
         if (returnData) {
           for (const element of JSON.parse(returnData)) {
-            
             let newIngredients = new IngredientMap();
             for (const ingr of element.ingredients) {
               newIngredients.set(ingr.ingr_name, {
@@ -186,16 +183,9 @@ const cocktailFilter = document.querySelector(
   ".search-wrapper .cocktail-filter"
 ) as HTMLInputElement;
 
-const attributeToSearch = document.querySelector(
-  ".search-wrapper .search-for-select"
-) as HTMLSelectElement;
-
 cocktailFilter.addEventListener("input", (event: any) => {
-  Cocktail.loadFromStorage(attributeToSearch.value,cocktailFilter.value);
+  Cocktail.loadFromStorage(cocktailFilter.value);
 });
-attributeToSearch.addEventListener('change', () => {
-  Cocktail.loadFromStorage(attributeToSearch.value,cocktailFilter.value);
-})
 
 document.querySelector(".input-wrapper .add-ingr-btn")
   ?.addEventListener("click", () => {

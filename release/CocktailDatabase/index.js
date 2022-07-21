@@ -71,11 +71,11 @@ class Cocktail {
         Utils.appendElements(cocktailWrapper, image, nameLabel, ingredients, deleteBtn);
         Utils.appendElements(this.parent, cocktailWrapper);
     }
-    static loadFromStorage(attr = "cocktail_name", searchFilter = "") {
+    static loadFromStorage(searchFilter = "") {
         $.ajax({
             url: "index.php",
             type: "GET",
-            data: { attribute: attr, searchFilter: searchFilter },
+            data: { searchFilter: searchFilter },
             success: function (returnData) {
                 parentDOMElement.innerHTML = "";
                 if (returnData) {
@@ -145,12 +145,8 @@ const parentDOMElement = document.querySelector(".cocktail-section");
 const ingredientWrapper = document.querySelector(".input-wrapper .ingredient-wrapper");
 let ingredients = new IngredientMap();
 const cocktailFilter = document.querySelector(".search-wrapper .cocktail-filter");
-const attributeToSearch = document.querySelector(".search-wrapper .search-for-select");
 cocktailFilter.addEventListener("input", (event) => {
-    Cocktail.loadFromStorage(attributeToSearch.value, cocktailFilter.value);
-});
-attributeToSearch.addEventListener('change', () => {
-    Cocktail.loadFromStorage(attributeToSearch.value, cocktailFilter.value);
+    Cocktail.loadFromStorage(cocktailFilter.value);
 });
 (_a = document.querySelector(".input-wrapper .add-ingr-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
     if (inputIngrName.value &&

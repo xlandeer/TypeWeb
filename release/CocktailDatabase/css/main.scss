@@ -2,7 +2,7 @@
 $bgColor: #171717;
 $bgSecondaryColor: #222;
 $primeColor: #fff;
-$secondaryColor: #2596be;
+$scondaryColor: #2596be;
 
 body {
 	background-color: $bgColor;
@@ -51,7 +51,7 @@ body {
 			
 			.cocktail-filter {
 				font-family: inherit;
-				width: 80%;
+				width: 100%;
 				border: 0;
 				border-bottom: 2px solid $primeColor;
 				outline: 0;
@@ -66,14 +66,6 @@ body {
 				}
 			
 			}
-			select {
-				width: 18%;
-				border: 1px solid $primeColor;
-				border-radius: 20px;
-				background-color: #171717;
-				color: #fff;
-			}
-
 		}
 		.cocktail-section {
 			display: grid;

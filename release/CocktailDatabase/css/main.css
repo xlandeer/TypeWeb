@@ -42,7 +42,7 @@ body main .search-wrapper {
 }
 body main .search-wrapper .cocktail-filter {
   font-family: inherit;
-  width: 80%;
+  width: 100%;
   border: 0;
   border-bottom: 2px solid #fff;
   outline: 0;
@@ -59,13 +59,6 @@ body main .search-wrapper .cocktail-filter:-ms-input-placeholder {
   color: #fff;
 }
 body main .search-wrapper .cocktail-filter::placeholder {
-  color: #fff;
-}
-body main .search-wrapper select {
-  width: 18%;
-  border: 1px solid #fff;
-  border-radius: 20px;
-  background-color: #171717;
   color: #fff;
 }
 body main .cocktail-section {

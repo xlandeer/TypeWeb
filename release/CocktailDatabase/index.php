@@ -73,11 +73,9 @@
 			executeQuery($conn, $sql);
 		}
 
-	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']) && isset($_GET['attribute']))	{
+	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']))	{
         $results = [];
-		$attr = $_GET['attribute'] == "ingr_name" ? "i.ingr_name" : "c.cocktail_name";
-
-        $sql = 'SELECT c.id, c.cocktail_name, c.image_url FROM cocktail c LEFT JOIN ingredients i ON c.id = i.cocktail_id WHERE '.$_GET["attribute"].' LIKE "%'.$_GET["searchFilter"].'%" GROUP BY c.cocktail_name;';
+        $sql = 'SELECT id, cocktail_name, image_url FROM cocktail WHERE cocktail_name LIKE "%'.$_GET["searchFilter"].'%";';
 		$searchRes = mysqli_query($conn, $sql);
 		if ($searchRes->num_rows > 0) {
 			

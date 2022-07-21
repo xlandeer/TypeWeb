@@ -9,5 +9,6 @@ if [ $# -eq 0 ]
         cp build/index.html release/$1/
         cp build/index.js release/$1/
         cp build/index.js.map release/$1/
+        cp build/index.php release/$1/
 fi
 
