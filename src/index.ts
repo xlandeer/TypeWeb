@@ -65,6 +65,7 @@ class Cocktail {
     private name: string,
     private ingredients: IngredientMap,
     private imgPath: string,
+    private description: string,
     private parent: HTMLDivElement,
     private id?: number
   ) {}
@@ -74,6 +75,7 @@ class Cocktail {
     let cocktailWrapper = Utils.createElementWithAttributes("div",["class","cocktail-wrapper"]);
     let image = Utils.createElementWithAttributes("img",["src",this.imgPath]);
     let nameLabel = Utils.createElementWithAttributes("h2");nameLabel.textContent = this.name;
+    let description = Utils.createElementWithAttributes("div", ["classname", "cocktail-description"]); description.textContent = this.description;
     let deleteBtn = Utils.createElementWithAttributes("input",["type", "image"],["src", "images/x_btn.svg"]);
 
     //Add DeleteBtn Event Listener
@@ -92,7 +94,7 @@ class Cocktail {
     }
     
     //Append Elements to their corresponding Parent
-    Utils.appendElements(cocktailWrapper,image,nameLabel,ingredients,deleteBtn);
+    Utils.appendElements(cocktailWrapper,image,nameLabel,ingredients,description,deleteBtn);
     Utils.appendElements(this.parent,cocktailWrapper);
   }
 
@@ -119,6 +121,7 @@ class Cocktail {
               element.name,
               newIngredients as IngredientMap,
               element.imageUrl,
+              element.description,
               parentDOMElement,
               element.id
             );
@@ -164,6 +167,7 @@ class Cocktail {
         name: cocktail.name,
         imageUrl: cocktail.imgPath,
         ingredients: cocktail.ingredients,
+        description: cocktail.description
       },
       success: function (data, status, xhr) {
         Cocktail.loadFromStorage();
@@ -210,6 +214,10 @@ const imageUpload = document.querySelector(
   ".input-wrapper #image-upload"
 ) as HTMLInputElement;
 
+const description = document.querySelector(
+  ".input-wrapper .cocktail_description"
+) as HTMLTextAreaElement;
+
 cocktailFilter.addEventListener("input", (event: any) => {
   Cocktail.loadFromStorage(attributeToSearch.value,cocktailFilter.value);
 });
@@ -245,11 +253,12 @@ document.querySelector(".input-wrapper .add-cocktail-btn")
       if(imageUpload.files) {
         imagePath = "images/" + imageUpload.files[0].name;
       }
-      if (cocktailName.value && imagePath) {
+      if (cocktailName.value && imagePath && description.value) {
         const newCocktail: Cocktail = new Cocktail(
           cocktailName.value,
           ingredients,
           imagePath,
+          description.value,
           parentDOMElement
         );
 
@@ -257,6 +266,8 @@ document.querySelector(".input-wrapper .add-cocktail-btn")
         ingredients = new IngredientMap();
         cocktailName.value = "";
         ingredientWrapper.innerHTML = "";
+        imageUpload.value = "";
+        description.value = "";
       }
       
     });

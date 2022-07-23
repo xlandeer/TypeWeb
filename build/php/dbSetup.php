@@ -26,7 +26,7 @@
 
 	// connect to database	
 	$conn = connToDB($sname, $uname, $pswd, $dbname);
-    $sql = "CREATE TABLE cocktail(id INT PRIMARY KEY AUTO_INCREMENT, cocktail_name varchar(50), image_url varchar(100))";
+    $sql = "CREATE TABLE cocktail(id INT PRIMARY KEY AUTO_INCREMENT, cocktail_name varchar(50), image_url varchar(100), description varchar(500));";
     executeQuery($conn,$sql);
     $sql = "CREATE TABLE ingredients(cocktail_id INT, ingr_name VARCHAR(50), ingr_amt INT, ingr_measure VARCHAR(10)";
     $sql .= "CONSTRAINT PK_Cocktail PRIMARY KEY (cocktail_id, ingr_name));";

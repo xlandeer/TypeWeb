@@ -33,9 +33,10 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']) && isset($_GET['attribute']))	{
         $results = [];
-		$attr = $_GET['attribute'] == "ingr_name" ? "i.ingr_name" : "c.cocktail_name";
+		$attr = $_GET['attribute'] == "ingr_name" ? "i." : "c.";
+		$attr .= $_GET['attribute'];
 
-        $sql = 'SELECT c.id, c.cocktail_name, c.image_url FROM cocktail c LEFT JOIN ingredients i ON c.id = i.cocktail_id WHERE '.$_GET["attribute"].' LIKE "%'.$_GET["searchFilter"].'%" GROUP BY c.cocktail_name;';
+        $sql = 'SELECT c.id, c.cocktail_name, c.image_url, c.description FROM cocktail c LEFT JOIN ingredients i ON c.id = i.cocktail_id WHERE '.$_GET["attribute"].' LIKE "%'.$_GET["searchFilter"].'%" GROUP BY c.cocktail_name;';
 		$searchRes = mysqli_query($conn, $sql);
 		if ($searchRes->num_rows > 0) {
 			
@@ -52,7 +53,7 @@
                         array_push($ingredientRes, $rowResIngr);
                     }
 				}
-				$rowRes = ['name' => $row["cocktail_name"], 'imageUrl' => $row["image_url"], 'ingredients' => $ingredientRes, 'id' => $id];
+				$rowRes = ['name' => $row["cocktail_name"], 'imageUrl' => $row["image_url"], 'ingredients' => $ingredientRes, 'id' => $id, 'description' => $row["description"]];
 				array_push($results, $rowRes);
 			}
 			echo(json_encode($results));
