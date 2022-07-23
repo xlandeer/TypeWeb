@@ -31,7 +31,7 @@ var Utils;
             let files = imageUpload.files;
             if (files) {
                 formData.append("file", files[0]);
-                const response = yield fetch('upload.php', {
+                const response = yield fetch('php/upload.php', {
                     method: "POST",
                     body: formData
                 });
@@ -97,7 +97,7 @@ class Cocktail {
     }
     static loadFromStorage(attr = "cocktail_name", searchFilter = "") {
         $.ajax({
-            url: "index.php",
+            url: "php/get.php",
             type: "GET",
             data: { attribute: attr, searchFilter: searchFilter },
             success: function (returnData) {
@@ -124,7 +124,7 @@ class Cocktail {
     }
     static deleteFromStorage(cocktail) {
         $.ajax({
-            url: "index.php",
+            url: "php/post.php",
             type: "POST",
             // all data || notation in JSON
             data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath },
@@ -142,7 +142,7 @@ class Cocktail {
         //     console.log(response);
         // });
         $.ajax({
-            url: "index.php",
+            url: "php/post.php",
             type: "POST",
             // all data || notation in JSON
             data: {

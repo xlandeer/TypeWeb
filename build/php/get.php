@@ -1,4 +1,5 @@
 <?php
+    //Get Connection
 
     function executeQuery($conn, $sql) {
         if (mysqli_query($conn, $sql)) {
@@ -21,49 +22,16 @@
 		}
     }
 
-	$sname = "127.0.0.1";
+    $sname = "127.0.0.1";
 	$uname = "root";
 	$pswd = "";
 	$dbname = "Cocktail";
 
-	// connect to database	
-	$conn = connToDB($sname, $uname, $pswd, $dbname);
+    $conn = connToDB($sname, $uname, $pswd, $dbname);
 
-	// If database is not setup:
-	// createTables($conn);
+    //GET REQUEST
 
-   	$RequestMethod = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING);
-	if ( $RequestMethod === 'POST' && !empty($_POST)) {
-		if($_POST["intention"] == "save") {
-			$cocktailname = $_POST["name"];
-			$imageurl = $_POST["imageUrl"];
-			$ingredients = $_POST["ingredients"];
-			var_dump($ingredients);
-
-			$sql = "INSERT INTO cocktail(cocktail_name, image_url)";
-			$sql .= "VALUES('$cocktailname', '$imageurl')";
-
-			executeQuery($conn, $sql);
-
-			$sql = "SELECT MAX(id) AS ID FROM cocktail";
-			$id = (int)mysqli_query($conn, $sql)->fetch_assoc()["ID"];
-			
-			
-			foreach ($ingredients["map"] as $key => $amt) {
-				$amtInt = (int)$amt["amt"];
-				$amtMeasure = $amt["measure"];
-				$sql = "INSERT INTO ingredients(cocktail_id, ingr_name, ingr_amt, ingr_measure)";
-				$sql .= "Values($id, '$key', $amtInt, '$amtMeasure')";
-				executeQuery($conn, $sql);
-			}
-		}else {
-			$id = $_POST['id'];
-			$sql = "DELETE FROM cocktail WHERE id = $id";
-			unlink($_POST['imgPath']);
-			executeQuery($conn, $sql);
-		}
-
-	}else if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']) && isset($_GET['attribute']))	{
+    if($_SERVER['REQUEST_METHOD'] === 'GET'  && isset($_GET['searchFilter']) && isset($_GET['attribute']))	{
         $results = [];
 		$attr = $_GET['attribute'] == "ingr_name" ? "i.ingr_name" : "c.cocktail_name";
 
@@ -92,13 +60,8 @@
 		
         
 	}else {
+        
 		http_response_code(405); 
 		die();
     }
-    // end the connection
-    mysqli_close($conn);	
-    
-
-    
-
 ?>

@@ -2,7 +2,7 @@
 
     $filename = $_FILES['file']['name'];
 
-    $location = "images/".basename($filename);
+    $location = "../images/".basename($filename);
     // echo(json_encode(is_writable("images")));
     if(move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
         echo 'Success ';

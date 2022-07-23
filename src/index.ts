@@ -26,7 +26,7 @@ namespace Utils {
     if(files){
       formData.append("file",files[0]);
 
-      const response = await fetch('upload.php', {
+      const response = await fetch('php/upload.php', {
         method: "POST",
         body: formData
       });
@@ -98,7 +98,7 @@ class Cocktail {
 
   static loadFromStorage(attr: string = "cocktail_name",searchFilter: string = "") {
     $.ajax({
-      url: "index.php",
+      url: "php/get.php",
       type: "GET",
       data: { attribute: attr, searchFilter: searchFilter },
       success: function (returnData) {
@@ -135,7 +135,7 @@ class Cocktail {
 
   static deleteFromStorage(cocktail: Cocktail) {
     $.ajax({
-      url: "index.php", // url where the data should be sent
+      url: "php/post.php", // url where the data should be sent
       type: "POST", // http method
 
       // all data || notation in JSON
@@ -155,7 +155,7 @@ class Cocktail {
     //     console.log(response);
     // });
     $.ajax({
-      url: "index.php", // url where the data should be sent
+      url: "php/post.php", // url where the data should be sent
       type: "POST", // http method
 
       // all data || notation in JSON
