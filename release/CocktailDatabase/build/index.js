@@ -64,10 +64,11 @@ class IngredientMap {
     }
 }
 class Cocktail {
-    constructor(name, ingredients, imgPath, parent, id) {
+    constructor(name, ingredients, imgPath, description, parent, id) {
         this.name = name;
         this.ingredients = ingredients;
         this.imgPath = imgPath;
+        this.description = description;
         this.parent = parent;
         this.id = id;
     }
@@ -77,6 +78,8 @@ class Cocktail {
         let image = Utils.createElementWithAttributes("img", ["src", this.imgPath]);
         let nameLabel = Utils.createElementWithAttributes("h2");
         nameLabel.textContent = this.name;
+        let description = Utils.createElementWithAttributes("div", ["classname", "cocktail-description"]);
+        description.textContent = this.description;
         let deleteBtn = Utils.createElementWithAttributes("input", ["type", "image"], ["src", "images/x_btn.svg"]);
         //Add DeleteBtn Event Listener
         const copy = this;
@@ -92,7 +95,7 @@ class Cocktail {
             ingredients.appendChild(ingredient);
         }
         //Append Elements to their corresponding Parent
-        Utils.appendElements(cocktailWrapper, image, nameLabel, ingredients, deleteBtn);
+        Utils.appendElements(cocktailWrapper, image, nameLabel, ingredients, description, deleteBtn);
         Utils.appendElements(this.parent, cocktailWrapper);
     }
     static loadFromStorage(attr = "cocktail_name", searchFilter = "") {
@@ -111,7 +114,7 @@ class Cocktail {
                                 measure: ingr.ingr_measure,
                             });
                         }
-                        const newCocktail = new Cocktail(element.name, newIngredients, element.imageUrl, parentDOMElement, element.id);
+                        const newCocktail = new Cocktail(element.name, newIngredients, element.imageUrl, element.description, parentDOMElement, element.id);
                         newCocktail.addRepresentation();
                     }
                 }
@@ -150,6 +153,7 @@ class Cocktail {
                 name: cocktail.name,
                 imageUrl: cocktail.imgPath,
                 ingredients: cocktail.ingredients,
+                description: cocktail.description
             },
             success: function (data, status, xhr) {
                 Cocktail.loadFromStorage();
@@ -170,6 +174,7 @@ let ingredients = new IngredientMap();
 const cocktailFilter = document.querySelector(".search-wrapper .cocktail-filter");
 const attributeToSearch = document.querySelector(".search-wrapper .search-for-select");
 const imageUpload = document.querySelector(".input-wrapper #image-upload");
+const description = document.querySelector(".input-wrapper .cocktail_description");
 cocktailFilter.addEventListener("input", (event) => {
     Cocktail.loadFromStorage(attributeToSearch.value, cocktailFilter.value);
 });
@@ -198,12 +203,14 @@ attributeToSearch.addEventListener('change', () => {
         if (imageUpload.files) {
             imagePath = "images/" + imageUpload.files[0].name;
         }
-        if (cocktailName.value && imagePath) {
-            const newCocktail = new Cocktail(cocktailName.value, ingredients, imagePath, parentDOMElement);
+        if (cocktailName.value && imagePath && description.value) {
+            const newCocktail = new Cocktail(cocktailName.value, ingredients, imagePath, description.value, parentDOMElement);
             Cocktail.saveToStorage(newCocktail);
             ingredients = new IngredientMap();
             cocktailName.value = "";
             ingredientWrapper.innerHTML = "";
+            imageUpload.value = "";
+            description.value = "";
         }
     });
 }));

@@ -1,5 +1,8 @@
 <?php
+    //On Linux your directory might not be writable. To fix execute the following line as an admin user; php upload.php - returns 1 if it worked;
+    //echo chmod("../images",0777);
 
+    
     $filename = $_FILES['file']['name'];
 
     $location = "../images/".basename($filename);

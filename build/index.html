@@ -7,66 +7,12 @@
 </head>
 <body>
   
-
   <main>
-    <div class="container">
-      <div class="row">
-        <h1 class="headline text-center">Cocktails</h1>
-        <div class="dropdown text-center">
-          <input type="checkbox" id="expand-toggle" />
-          <label for="expand-toggle" id="expand-btn">Add New Cocktail</label>
-          <div class="input-wrapper text-center" id="inputwrapper">
-            <div>
-              <span>
-                Image Upload
-                <input class="col-8" id="image-upload" type="file" name="image-upload">
-              </span>
-            </div>
-
-            <div>
-              <label for="name">Cocktail Name</label>
-              <input class="name col-8" type="text">
-            </div>
-
-            <div>
-              <input class="add-ingr-name col-4 mt-4" type="text" placeholder="Ingredient" required>
-              <input class="add-ingr-amt col-4 mt-4" type="number" placeholder="Amount" required>
-              <select name="Measurement" class="meas-select">
-                <option value="ml">ml</option>
-                <option value="oz">oz</option>
-                <option value="slices">Slices</option>
-                <option value="times">x</option>
-              </select>
-              <button class="add-ingr-btn">Add</button>
-            </div>
-            <div class="ingredient-wrapper my-2"></div>
-            <textarea name="cocktail_description" class="cocktail_description col-10" cols="50" rows="4" placeholder="Description -> guide e.g."></textarea>
-            <div>
-              <button class="add-cocktail-btn col-12 my-2">Add Cocktiail</button>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="search-wrapper text-center my-2">
-          <input type="search" class="cocktail-filter" placeholder="Search...">
-          <Select class="search-for-select">
-            <option value="cocktail_name">Cocktail Name</option>
-            <option value="ingr_name">Ingredient</option>
-            <option value="description">Description</option>
-          </Select>
-        </div>
-        
-        <div class="cocktail-section col-12">
-          
-        </div>
-        
-      </div>
-    </div>
 
   </main>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="crossorigin="anonymous"></script>
+  <!-- If needed: -->
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="crossorigin="anonymous"></script> -->
   <script src="index.js"></script>
 </body>
 </html>

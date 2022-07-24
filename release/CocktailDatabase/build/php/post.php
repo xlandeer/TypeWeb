@@ -37,10 +37,11 @@
 			$cocktailname = $_POST["name"];
 			$imageurl = $_POST["imageUrl"];
 			$ingredients = $_POST["ingredients"];
-			var_dump($ingredients);
+			$description = $_POST["description"];
+			
 
-			$sql = "INSERT INTO cocktail(cocktail_name, image_url)";
-			$sql .= "VALUES('$cocktailname', '$imageurl')";
+			$sql = "INSERT INTO cocktail(cocktail_name, image_url, description)";
+			$sql .= "VALUES('$cocktailname', '$imageurl', '$description')";
 
 			executeQuery($conn, $sql);
 
