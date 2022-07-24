@@ -7,7 +7,7 @@ Partly learned from:
   - [x] Checklist
   - [x] Maze Generator
   - [X] Cocktail Database
-  - [ ] Browser VS. Game Framework
+  - [ ] Online Browser VS. Game Framework
     - [ ] Battleships
     - [ ] Tic-Tac-Toe
     - [ ] Rock-Paper-Scissors
