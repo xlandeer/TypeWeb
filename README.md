@@ -6,8 +6,13 @@ Partly learned from:
 * Project Ideas:
   - [x] Checklist
   - [x] Maze Generator
-  - [ ] Cocktail Database
-  - [ ] Chess-Engine(Already begun)
+  - [X] Cocktail Database
+  - [ ] Browser VS. Game Framework
+    - [ ] Battleships
+    - [ ] Tic-Tac-Toe
+    - [ ] Rock-Paper-Scissors
+  - [ ] Table Framework like Excel
+  - [ ] Cocktail Database w/ Process Wire
   - [ ] Small scoped browser Game
   
 # Requirements #
