@@ -3,7 +3,6 @@ Description: Small project by aspiring programmers wanting to learn to work with
 Partly learned from:
 "Programming TypeScript by Boris Cherny (O’Reilly). Copyright 2019 Boris Cherny, 978-1-492-03765-1.”
 
-
 * Project Ideas:
   - [x] Checklist
   - [x] Maze Generator
