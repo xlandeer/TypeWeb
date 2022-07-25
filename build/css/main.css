@@ -6,4 +6,14 @@ body main {
   margin: 5rem 0;
   font-family: "Poppins";
   color: #fff;
+}
+body main .field-wrapper {
+  display: grid;
+}
+body main .field-wrapper .field-cell {
+  border: 1px solid #fff;
+}
+body main .field-wrapper .field-cell-ship {
+  border: 1px solid #fff;
+  background-color: red;
 }/*# sourceMappingURL=main.css.map */
