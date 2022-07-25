@@ -30,9 +30,9 @@ var Utils;
             let formData = new FormData();
             if (file) {
                 formData.append("file", file);
-                const response = yield fetch('php/upload.php', {
+                const response = yield fetch("php/upload.php", {
                     method: "POST",
-                    body: formData
+                    body: formData,
                 });
                 //console.log(await response);
             }
@@ -46,64 +46,143 @@ class Position {
         this.posY = posY;
     }
 }
-;
 class Ship {
-    constructor(...coords) {
-        this.coords = coords;
+    constructor(...coreOffsets) {
+        this.isSet = false;
+        this.core = new Position(0, 0);
+        this.coords = new Array();
+        this.coreOffsets = coreOffsets;
+    }
+    projectShip(corePosition, field) {
+        this.clearCoords(field);
+        if (!this.isSet) {
+            this.core = corePosition;
+            field[corePosition.posX][corePosition.posY].asShip();
+            this.coords.push(corePosition);
+            for (const offset of this.coreOffsets) {
+                let cell;
+                if (corePosition.posX + offset[0] <= fieldWidth - 1 &&
+                    corePosition.posY + offset[1] <= fieldHeight - 1 &&
+                    corePosition.posX + offset[0] >= 0 &&
+                    corePosition.posY + offset[1] >= 0) {
+                    field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip();
+                    this.coords.push(new Position(corePosition.posX + offset[0], corePosition.posY + offset[1]));
+                }
+            }
+        }
+    }
+    clearCoords(field) {
+        if (this.coords.length) {
+            for (const coord of this.coords) {
+                field[coord.posX][coord.posY].asNormal();
+            }
+            this.coords = new Array();
+        }
+    }
+    setShip() {
+        this.isSet = true;
+        for (const coord of this.coords) {
+            battleField.field[coord.posX][coord.posY].setAsShip();
+        }
+    }
+    getCoords() {
+        return this.coords;
     }
 }
 class BattleField {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.fieldWrapper = Utils.createElementWithAttributes('div', ['class', 'field-wrapper']);
+        this.fieldWrapper = Utils.createElementWithAttributes("div", [
+            "class",
+            "field-wrapper",
+        ]);
         this.field = new Array();
         this.ships = new Array();
         this.shipPositions = new Array();
         this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
         this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
         parentDOMElement === null || parentDOMElement === void 0 ? void 0 : parentDOMElement.appendChild(this.fieldWrapper);
-        for (let y = 0; y < this.height; y++) {
-            this.field[y] = new Array(this.width);
-            for (let x = 0; x < this.width; x++) {
-                this.field[y][x] = new Cell(new Position(x, y), this.fieldWrapper);
+        for (let x = 0; x < this.height; x++) {
+            this.field[x] = new Array(this.width);
+            for (let y = 0; y < this.width; y++) {
+                this.field[x][y] = new Cell(new Position(x, y), this.fieldWrapper, this);
             }
         }
     }
-    checkShip(position) {
-        for (const shipPos of this.shipPositions) {
-            if (shipPos == position) {
-                return true;
+    checkShip(ship) {
+        for (const coord of ship.getCoords()) {
+            if (battleField.field[coord.posX][coord.posY].isShip()) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
-    generateShips() {
-        let noMoreShips;
-        while (!noMoreShips) {
-            //TODO 
-        }
+    addShip(ship) {
+        this.ships.push(ship);
     }
 }
 class Cell {
-    constructor(position, mazeWrapper) {
+    constructor(position, mazeWrapper, parent) {
         this.position = position;
         this.mazeWrapper = mazeWrapper;
-        this.isShip = false;
-        this.div = Utils.createElementWithAttributes('div', ['class', 'field-cell']);
+        this.parent = parent;
+        this.ship = false;
+        this.div = Utils.createElementWithAttributes("div", [
+            "class",
+            "field-cell",
+        ]);
         this.mazeWrapper.appendChild(this.div);
-        this.div.addEventListener('click', () => { this.asShip(); });
+        this.div.addEventListener("click", () => {
+            Cell.constructShipOnCell(this);
+        });
+        this.div.addEventListener("mouseover", (event) => {
+            Cell.projectShipOnCell(this);
+        });
+    }
+    static projectShipOnCell(cell) {
+        if (!cell.ship && activeShip != undefined) {
+            activeShip.projectShip(cell.position, cell.parent.field);
+        }
+    }
+    static constructShipOnCell(cell) {
+        if (activeShip != undefined) {
+            if (cell.parent.checkShip(activeShip)) {
+                activeShip.setShip();
+                cell.parent.addShip(activeShip);
+                activeShip = availableShips.pop();
+            }
+        }
     }
     getPosition() {
         return this.position;
     }
     asShip() {
         this.div.className = "field-cell-ship";
-        this.isShip = true;
+    }
+    asNormal() {
+        if (!this.ship) {
+            this.div.className = "field-cell";
+        }
+    }
+    setAsShip() {
+        this.ship = true;
+    }
+    isShip() {
+        return this.ship;
     }
 }
-let parentDOMElement = document.querySelector('main');
-(_a = document.querySelector(".input-wrapper .add-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
-});
-let battleField = new BattleField(20, 20);
+const parentDOMElement = document.querySelector("main");
+const availableShips = [
+    new Ship([1, 0], [0, 1]),
+    new Ship([1, 0], [2, 0]),
+    new Ship([0, 2], [0, 1]),
+    new Ship([1, 1], [0, 1], [2, 1]),
+];
+let activeShip = availableShips.pop();
+(_a = document
+    .querySelector(".input-wrapper .add-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => { });
+const fieldWidth = 15;
+const fieldHeight = 15;
+let battleField = new BattleField(15, 15);
 //# sourceMappingURL=index.js.map

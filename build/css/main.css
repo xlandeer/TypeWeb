@@ -7,8 +7,14 @@ body main {
   font-family: "Poppins";
   color: #fff;
 }
+body main .input-wrapper {
+  width: 50%;
+  margin-left: 10%;
+}
 body main .field-wrapper {
   display: grid;
+  width: 50%;
+  margin-left: 10%;
 }
 body main .field-wrapper .field-cell {
   border: 1px solid #fff;
