@@ -142,7 +142,7 @@ class Cocktail {
       type: "POST", // http method
 
       // all data || notation in JSON
-      data: { intention: "delete", id: cocktail.id, imgPath: cocktail.imgPath},
+      data: { intention: "delete", id: cocktail.id, imgPath: "../"+cocktail.imgPath},
       success: function (data, status, xhr) {
         Cocktail.loadFromStorage();
       },
