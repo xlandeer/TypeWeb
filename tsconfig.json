@@ -1,12 +1,14 @@
 {
-  "compilerOptions": {
-    "lib": ["es6","DOM"],
-    "module": "commonjs",
-    "outDir": "./build",
-    "sourceMap": true,
-    "strict": true,
-    "target": "es6"
-  },
-  "include": [
-    "src"]
+    "compilerOptions": {
+        "lib": ["es6","DOM"],
+        "module": "commonjs",
+        "outDir": "./build",
+        "sourceMap": true,
+        "strict": true,
+        "target": "es6"
+    },
+
+    "include": [
+        "src/*.ts"
+    ]
 }

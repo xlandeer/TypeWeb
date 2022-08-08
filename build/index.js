@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
+// tslint:disable-next-line:no-namespace
 var Utils;
 (function (Utils) {
     function appendElements(parent, ...nodes) {
@@ -18,7 +19,7 @@ var Utils;
     }
     Utils.appendElements = appendElements;
     function createElementWithAttributes(name, ...attributes) {
-        let element = document.createElement(name);
+        const element = document.createElement(name);
         for (const attribute of attributes) {
             element.setAttribute(attribute[0], attribute[1]);
         }
@@ -27,14 +28,14 @@ var Utils;
     Utils.createElementWithAttributes = createElementWithAttributes;
     function uploadFile(file) {
         return __awaiter(this, void 0, void 0, function* () {
-            let formData = new FormData();
+            const formData = new FormData();
             if (file) {
                 formData.append("file", file);
                 const response = yield fetch("php/upload.php", {
                     method: "POST",
                     body: formData,
                 });
-                //console.log(await response);
+                // console.log(await response);
             }
         });
     }
@@ -50,7 +51,7 @@ class Ship {
     constructor(...coreOffsets) {
         this.isSet = false;
         this.core = new Position(0, 0);
-        this.coords = new Array();
+        this.coords = [];
         this.coreOffsets = coreOffsets;
     }
     projectShip(corePosition, field) {
@@ -60,7 +61,6 @@ class Ship {
             field[corePosition.posX][corePosition.posY].asShip();
             this.coords.push(corePosition);
             for (const offset of this.coreOffsets) {
-                let cell;
                 if (corePosition.posX + offset[0] <= fieldWidth - 1 &&
                     corePosition.posY + offset[1] <= fieldHeight - 1 &&
                     corePosition.posX + offset[0] >= 0 &&
@@ -76,7 +76,7 @@ class Ship {
             for (const coord of this.coords) {
                 field[coord.posX][coord.posY].asNormal();
             }
-            this.coords = new Array();
+            this.coords = [];
         }
     }
     setShip() {
@@ -97,15 +97,16 @@ class BattleField {
             "class",
             "field-wrapper",
         ]);
-        this.field = new Array();
-        this.ships = new Array();
-        this.shipPositions = new Array();
+        this.field = [];
+        this.ships = [];
+        this.shipPositions = [];
+        this.set = false;
         this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
         this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
         parentDOMElement === null || parentDOMElement === void 0 ? void 0 : parentDOMElement.appendChild(this.fieldWrapper);
-        for (let x = 0; x < this.height; x++) {
+        for (let x = 0; x < this.width; x++) {
             this.field[x] = new Array(this.width);
-            for (let y = 0; y < this.width; y++) {
+            for (let y = 0; y < this.height; y++) {
                 this.field[x][y] = new Cell(new Position(x, y), this.fieldWrapper, this);
             }
         }
@@ -141,12 +142,12 @@ class Cell {
         });
     }
     static projectShipOnCell(cell) {
-        if (!cell.ship && activeShip != undefined) {
+        if (!cell.ship && activeShip !== undefined) {
             activeShip.projectShip(cell.position, cell.parent.field);
         }
     }
     static constructShipOnCell(cell) {
-        if (activeShip != undefined) {
+        if (activeShip !== undefined) {
             if (cell.parent.checkShip(activeShip)) {
                 activeShip.setShip();
                 cell.parent.addShip(activeShip);
@@ -174,14 +175,13 @@ class Cell {
 }
 const parentDOMElement = document.querySelector("main");
 const availableShips = [
-    new Ship([1, 0], [0, 1]),
-    new Ship([1, 0], [2, 0]),
-    new Ship([0, 2], [0, 1]),
-    new Ship([1, 1], [0, 1], [2, 1]),
+    new Ship([5, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
 ];
 let activeShip = availableShips.pop();
 (_a = document
-    .querySelector(".input-wrapper .add-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => { });
+    .querySelector(".input-wrapper .add-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+    battleField.set = true;
+});
 const fieldWidth = 15;
 const fieldHeight = 15;
 let battleField = new BattleField(15, 15);
