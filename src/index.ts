@@ -44,19 +44,35 @@ class Ship {
     this.coreOffsets = coreOffsets;
   }
 
+
+  // TODO: rework method
+  public isChipInBounds(corePosition: Position, field: Cell[][]) {
+
+    for (const offset of this.coreOffsets) {
+      if (corePosition.posX + offset[0] >= fieldWidth ||
+        corePosition.posY + offset[1] >= fieldHeight ||
+        corePosition.posX + offset[0] < 0 ||
+        corePosition.posY + offset[1] < 0
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public projectShip(corePosition: Position, field: Cell[][]) {
     this.clearCoords(field);
-    if (!this.isSet) {
+    if (!this.isSet && this.isChipInBounds(corePosition, field)) {
       this.core = corePosition;
       field[corePosition.posX][corePosition.posY].asShip();
       this.coords.push(corePosition);
       for (const offset of this.coreOffsets) {
-        if (
-          corePosition.posX + offset[0] <= fieldWidth - 1 &&
-          corePosition.posY + offset[1] <= fieldHeight - 1 &&
-          corePosition.posX + offset[0] >= 0 &&
-          corePosition.posY + offset[1] >= 0
-        ) {
+        // if (
+        //   corePosition.posX + offset[0] <= fieldWidth - 1 &&
+        //   corePosition.posY + offset[1] <= fieldHeight - 1 &&
+        //   corePosition.posX + offset[0] >= 0 &&
+        //   corePosition.posY + offset[1] >= 0
+        // ) {
           field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip();
           this.coords.push(
             new Position(
@@ -64,7 +80,7 @@ class Ship {
               corePosition.posY + offset[1]
             )
           );
-        }
+        // }
       }
     }
   }
@@ -119,6 +135,9 @@ class BattleField {
   }
 
   public checkShip(ship: Ship) {
+    // check if coordinates are already assigned  
+    if (!ship.getCoords().length) return false;
+
     for (const coord of ship.getCoords()) {
       if (battleField.field[coord.posX][coord.posY].isShip()) {
         return false;

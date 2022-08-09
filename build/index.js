@@ -54,20 +54,34 @@ class Ship {
         this.coords = [];
         this.coreOffsets = coreOffsets;
     }
+    // TODO: rework method
+    isChipInBounds(corePosition, field) {
+        for (const offset of this.coreOffsets) {
+            if (corePosition.posX + offset[0] >= fieldWidth ||
+                corePosition.posY + offset[1] >= fieldHeight ||
+                corePosition.posX + offset[0] < 0 ||
+                corePosition.posY + offset[1] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     projectShip(corePosition, field) {
         this.clearCoords(field);
-        if (!this.isSet) {
+        if (!this.isSet && this.isChipInBounds(corePosition, field)) {
             this.core = corePosition;
             field[corePosition.posX][corePosition.posY].asShip();
             this.coords.push(corePosition);
             for (const offset of this.coreOffsets) {
-                if (corePosition.posX + offset[0] <= fieldWidth - 1 &&
-                    corePosition.posY + offset[1] <= fieldHeight - 1 &&
-                    corePosition.posX + offset[0] >= 0 &&
-                    corePosition.posY + offset[1] >= 0) {
-                    field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip();
-                    this.coords.push(new Position(corePosition.posX + offset[0], corePosition.posY + offset[1]));
-                }
+                // if (
+                //   corePosition.posX + offset[0] <= fieldWidth - 1 &&
+                //   corePosition.posY + offset[1] <= fieldHeight - 1 &&
+                //   corePosition.posX + offset[0] >= 0 &&
+                //   corePosition.posY + offset[1] >= 0
+                // ) {
+                field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip();
+                this.coords.push(new Position(corePosition.posX + offset[0], corePosition.posY + offset[1]));
+                // }
             }
         }
     }
@@ -112,6 +126,9 @@ class BattleField {
         }
     }
     checkShip(ship) {
+        // check if coordinates are already assigned  
+        if (!ship.getCoords().length)
+            return false;
         for (const coord of ship.getCoords()) {
             if (battleField.field[coord.posX][coord.posY].isShip()) {
                 return false;
@@ -175,7 +192,7 @@ class Cell {
 }
 const parentDOMElement = document.querySelector("main");
 const availableShips = [
-    new Ship([5, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
+    new Ship([0, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
 ];
 let activeShip = availableShips.pop();
 (_a = document
@@ -184,5 +201,5 @@ let activeShip = availableShips.pop();
 });
 const fieldWidth = 15;
 const fieldHeight = 15;
-let battleField = new BattleField(15, 15);
+let battleField = new BattleField(fieldWidth, fieldHeight);
 //# sourceMappingURL=index.js.map
