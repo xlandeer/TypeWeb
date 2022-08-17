@@ -18,10 +18,6 @@
     "typescript": "latest",
     "@types/node": "latest",
     "@types/jquery": "latest",
-    "tslint": "latest",
-    "winston": "latest",
-    "@types/jest": "latest",
-    "jest": "latest",
-    "ts-jest": "latest"
+    "tslint": "latest"
   }
 }

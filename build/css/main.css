@@ -11,15 +11,38 @@ body main .input-wrapper {
   width: 50%;
   margin-left: 10%;
 }
-body main .field-wrapper {
+body main .battle-field-wrapper {
   display: grid;
-  width: 50%;
-  margin-left: 10%;
+  grid-template-columns: repeat(2, 1fr);
 }
-body main .field-wrapper .field-cell {
+body main .battle-field-wrapper .field-wrapper {
+  display: grid;
+  margin: 2rem;
+}
+body main .battle-field-wrapper .field-wrapper .field-cell {
   border: 1px solid #fff;
 }
-body main .field-wrapper .field-cell-ship {
+body main .battle-field-wrapper .field-wrapper .field-cell-ship {
   border: 1px solid #fff;
   background-color: red;
-}/*# sourceMappingURL=main.css.map */
+}
+body main .battle-field-wrapper .field-wrapper-ai {
+  display: grid;
+  margin: 2rem;
+}
+body main .battle-field-wrapper .field-wrapper-ai .field-cell {
+  border: 1px solid #fff;
+}
+body main .battle-field-wrapper .field-wrapper-ai .field-cell-ship {
+  border: 1px solid #fff;
+}
+body main .battle-field-wrapper .field-wrapper-ai .field-cell-hit {
+  border: 1px solid #fff;
+  background-color: red;
+}
+body main .battle-field-wrapper .field-wrapper-ai .field-cell-hit-ship {
+  border: 1px solid #fff;
+  background-color: blue;
+}
+
+/*# sourceMappingURL=main.css.map */

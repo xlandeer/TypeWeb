@@ -12,21 +12,43 @@ body {
 		font-family: "Poppins";
 		color: $primeColor;
 		.input-wrapper {
-
 			width: 50%;
 			margin-left: 10%;
 		}
-		.field-wrapper {
+		.battle-field-wrapper {
 			display: grid;
-			width: 50%;
-			margin-left: 10%;
-			
-			.field-cell {
-				border: 1px solid #fff;
+			grid-template-columns: repeat(2, 1fr);
+			.field-wrapper {
+				display: grid;
+				margin: 2rem;
+
+				.field-cell {
+					border: 1px solid #fff;
+				}
+				.field-cell-ship {
+					border: 1px solid #fff;
+					background-color: red;
+				}
 			}
-			.field-cell-ship {
-				border: 1px solid #fff;
-				background-color: red;
+			.field-wrapper-ai {
+				display: grid;
+				margin: 2rem;
+				.field-cell {
+					border: 1px solid #fff;
+				}
+				.field-cell-ship {
+					border: 1px solid #fff;
+				}
+
+				.field-cell-hit {
+					border: 1px solid #fff;
+					background-color: red;
+				}
+
+				.field-cell-hit-ship {
+					border: 1px solid #fff;
+					background-color: blue;
+				}
 			}
 		}
 	}

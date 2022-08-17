@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
-// tslint:disable-next-line:no-namespace
 var Utils;
 (function (Utils) {
     function appendElements(parent, ...nodes) {
@@ -48,14 +47,15 @@ class Position {
     }
 }
 class Ship {
-    constructor(...coreOffsets) {
+    constructor(parent, ...coreOffsets) {
+        this.parent = parent;
         this.isSet = false;
         this.core = new Position(0, 0);
         this.coords = [];
         this.coreOffsets = coreOffsets;
     }
     // TODO: rework method
-    isChipInBounds(corePosition, field) {
+    isChipInBounds(corePosition) {
         for (const offset of this.coreOffsets) {
             if (corePosition.posX + offset[0] >= fieldWidth ||
                 corePosition.posY + offset[1] >= fieldHeight ||
@@ -68,7 +68,7 @@ class Ship {
     }
     projectShip(corePosition, field) {
         this.clearCoords(field);
-        if (!this.isSet && this.isChipInBounds(corePosition, field)) {
+        if (!this.isSet && this.isChipInBounds(corePosition)) {
             this.core = corePosition;
             field[corePosition.posX][corePosition.posY].asShip();
             this.coords.push(corePosition);
@@ -96,67 +96,45 @@ class Ship {
     setShip() {
         this.isSet = true;
         for (const coord of this.coords) {
-            battleField.field[coord.posX][coord.posY].setAsShip();
+            this.parent.field[coord.posX][coord.posY].setAsShip();
         }
     }
     getCoords() {
         return this.coords;
     }
 }
-class BattleField {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-        this.fieldWrapper = Utils.createElementWithAttributes("div", [
-            "class",
-            "field-wrapper",
-        ]);
-        this.field = [];
-        this.ships = [];
-        this.shipPositions = [];
-        this.set = false;
-        this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
-        this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
-        parentDOMElement === null || parentDOMElement === void 0 ? void 0 : parentDOMElement.appendChild(this.fieldWrapper);
-        for (let x = 0; x < this.width; x++) {
-            this.field[x] = new Array(this.width);
-            for (let y = 0; y < this.height; y++) {
-                this.field[x][y] = new Cell(new Position(x, y), this.fieldWrapper, this);
-            }
-        }
-    }
-    checkShip(ship) {
-        // check if coordinates are already assigned  
-        if (!ship.getCoords().length)
-            return false;
-        for (const coord of ship.getCoords()) {
-            if (battleField.field[coord.posX][coord.posY].isShip()) {
-                return false;
-            }
-        }
-        return true;
-    }
-    addShip(ship) {
-        this.ships.push(ship);
-    }
-}
 class Cell {
-    constructor(position, mazeWrapper, parent) {
+    constructor(position, mazeWrapper, parent, isUsed = true) {
         this.position = position;
         this.mazeWrapper = mazeWrapper;
         this.parent = parent;
+        this.isUsed = isUsed;
         this.ship = false;
         this.div = Utils.createElementWithAttributes("div", [
             "class",
             "field-cell",
         ]);
         this.mazeWrapper.appendChild(this.div);
-        this.div.addEventListener("click", () => {
-            Cell.constructShipOnCell(this);
-        });
-        this.div.addEventListener("mouseover", (event) => {
-            Cell.projectShipOnCell(this);
-        });
+        this.setEventListeners();
+    }
+    setEventListeners() {
+        if (this.isUsed) {
+            this.div.addEventListener("click", () => {
+                Cell.constructShipOnCell(this);
+            });
+            this.div.addEventListener("mouseover", (event) => {
+                Cell.projectShipOnCell(this);
+            });
+        }
+        else {
+            this.div.addEventListener("click", () => {
+                this.hit();
+            });
+        }
+    }
+    hit() {
+        this.div.className = this.ship ? "field-cell-hit-ship" : "field-cell-hit";
+        console.log(this.position);
     }
     static projectShipOnCell(cell) {
         if (!cell.ship && activeShip !== undefined) {
@@ -190,16 +168,72 @@ class Cell {
         return this.ship;
     }
 }
-const parentDOMElement = document.querySelector("main");
+class BattleField {
+    constructor(width, height, userControlled = true) {
+        this.width = width;
+        this.height = height;
+        this.userControlled = userControlled;
+        this.field = [];
+        this.ships = [];
+        this.shipPositions = [];
+        this.set = false;
+        this.fieldWrapper = Utils.createElementWithAttributes("div", [
+            "class",
+            userControlled ? "field-wrapper" : "field-wrapper-ai",
+        ]);
+        this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
+        this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
+        for (let x = 0; x < this.width; x++) {
+            this.field[x] = new Array(this.width);
+            for (let y = 0; y < this.height; y++) {
+                this.field[x][y] = new Cell(new Position(x, y), this.fieldWrapper, this, userControlled);
+            }
+        }
+        if (!userControlled) {
+            this.placeShips([new Ship(this, [0, 1], [0, -1])]);
+        }
+    }
+    draw() {
+        parentDOMElement === null || parentDOMElement === void 0 ? void 0 : parentDOMElement.appendChild(this.fieldWrapper);
+    }
+    checkShip(ship) {
+        // check if coordinates are already assigned
+        if (!ship.getCoords().length)
+            return false;
+        for (const coord of ship.getCoords()) {
+            if (this.field[coord.posX][coord.posY].isShip()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    addShip(ship) {
+        this.ships.push(ship);
+    }
+    placeShips(unsetShips) {
+        for (const ship of unsetShips) {
+            let corePosition;
+            corePosition = new Position(Math.floor(Math.random() * fieldWidth), Math.floor(Math.random() * fieldHeight));
+            ship.projectShip(corePosition, this.field);
+            ship.setShip();
+            console.log(ship.getCoords());
+        }
+    }
+}
+const parentDOMElement = document.querySelector(".battle-field-wrapper");
+const fieldWidth = 15;
+const fieldHeight = 15;
+let ownField = new BattleField(fieldWidth, fieldHeight);
+let enemyField = new BattleField(fieldWidth, fieldHeight, false);
+ownField.draw();
 const availableShips = [
-    new Ship([0, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
+    new Ship(ownField, [0, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
 ];
 let activeShip = availableShips.pop();
 (_a = document
-    .querySelector(".input-wrapper .add-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
-    battleField.set = true;
+    .querySelector(".input-wrapper .start-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+    ownField.set = true;
+    enemyField.draw();
+    enemyField.set = true;
 });
-const fieldWidth = 15;
-const fieldHeight = 15;
-let battleField = new BattleField(fieldWidth, fieldHeight);
 //# sourceMappingURL=index.js.map
