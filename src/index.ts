@@ -49,8 +49,7 @@ class Ship {
 
 
   // TODO: rework method
-  public isChipInBounds(corePosition: Position) {
-
+  public isShipInBounds(corePosition: Position) {
     for (const offset of this.coreOffsets) {
       if (corePosition.posX + offset[0] >= fieldWidth ||
         corePosition.posY + offset[1] >= fieldHeight ||
@@ -65,27 +64,22 @@ class Ship {
 
   public projectShip(corePosition: Position, field: Cell[][]) {
     this.clearCoords(field);
-    if (!this.isSet && this.isChipInBounds(corePosition)) {
+    if (!this.isSet && this.isShipInBounds(corePosition)) {
       this.core = corePosition;
       field[corePosition.posX][corePosition.posY].asShip(this);
       this.coords.push(corePosition);
       for (const offset of this.coreOffsets) {
-        // if (
-        //   corePosition.posX + offset[0] <= fieldWidth - 1 &&
-        //   corePosition.posY + offset[1] <= fieldHeight - 1 &&
-        //   corePosition.posX + offset[0] >= 0 &&
-        //   corePosition.posY + offset[1] >= 0
-        // ) {
-          field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip(this);
-          this.coords.push(
-            new Position(
-              corePosition.posX + offset[0],
-              corePosition.posY + offset[1]
-            )
-          );
-        // }
+        field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip(this);
+        this.coords.push(
+          new Position(
+            corePosition.posX + offset[0],
+            corePosition.posY + offset[1]
+          )
+        );
       }
+      return true;
     }
+    return false;
   }
 
   private clearCoords(field: Cell[][]) {
@@ -144,8 +138,6 @@ class Cell {
 
   private hit() {
     this.div.className = this.ship ? "field-cell-hit-ship" : "field-cell-hit";
-
-    console.log(this.position)
   }
 
   static projectShipOnCell(cell: Cell) {
@@ -244,13 +236,13 @@ class BattleField {
   private placeShips(unsetShips: Ship[]) {
     for (const ship of unsetShips) {
       let corePosition: Position;
-      corePosition = new Position(
-        Math.floor(Math.random() * fieldWidth),
-        Math.floor(Math.random() * fieldHeight)
-      );
-      ship.projectShip(corePosition, this.field);
+      do {
+        corePosition = new Position(
+            Math.floor(Math.random() * fieldWidth),
+            Math.floor(Math.random() * fieldHeight)
+        );
+      } while(!ship.projectShip(corePosition, this.field));
       ship.setShip();
-      console.log(ship.getCoords());
     }
   }
 }

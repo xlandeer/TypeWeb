@@ -52,10 +52,11 @@ class Ship {
         this.isSet = false;
         this.core = new Position(0, 0);
         this.coords = [];
+        this.coordsHit = [];
         this.coreOffsets = coreOffsets;
     }
     // TODO: rework method
-    isChipInBounds(corePosition) {
+    isShipInBounds(corePosition) {
         for (const offset of this.coreOffsets) {
             if (corePosition.posX + offset[0] >= fieldWidth ||
                 corePosition.posY + offset[1] >= fieldHeight ||
@@ -68,9 +69,9 @@ class Ship {
     }
     projectShip(corePosition, field) {
         this.clearCoords(field);
-        if (!this.isSet && this.isChipInBounds(corePosition)) {
+        if (!this.isSet && this.isShipInBounds(corePosition)) {
             this.core = corePosition;
-            field[corePosition.posX][corePosition.posY].asShip();
+            field[corePosition.posX][corePosition.posY].asShip(this);
             this.coords.push(corePosition);
             for (const offset of this.coreOffsets) {
                 // if (
@@ -79,11 +80,13 @@ class Ship {
                 //   corePosition.posX + offset[0] >= 0 &&
                 //   corePosition.posY + offset[1] >= 0
                 // ) {
-                field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip();
+                field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip(this);
                 this.coords.push(new Position(corePosition.posX + offset[0], corePosition.posY + offset[1]));
                 // }
             }
+            return true;
         }
+        return false;
     }
     clearCoords(field) {
         if (this.coords.length) {
@@ -110,6 +113,7 @@ class Cell {
         this.parent = parent;
         this.isUsed = isUsed;
         this.ship = false;
+        this.parentShip = undefined;
         this.div = Utils.createElementWithAttributes("div", [
             "class",
             "field-cell",
@@ -134,7 +138,6 @@ class Cell {
     }
     hit() {
         this.div.className = this.ship ? "field-cell-hit-ship" : "field-cell-hit";
-        console.log(this.position);
     }
     static projectShipOnCell(cell) {
         if (!cell.ship && activeShip !== undefined) {
@@ -153,13 +156,15 @@ class Cell {
     getPosition() {
         return this.position;
     }
-    asShip() {
+    asShip(parentShip) {
         this.div.className = "field-cell-ship";
+        this.parentShip = parentShip;
     }
     asNormal() {
         if (!this.ship) {
             this.div.className = "field-cell";
         }
+        this.parentShip = undefined;
     }
     setAsShip() {
         this.ship = true;
@@ -213,10 +218,10 @@ class BattleField {
     placeShips(unsetShips) {
         for (const ship of unsetShips) {
             let corePosition;
-            corePosition = new Position(Math.floor(Math.random() * fieldWidth), Math.floor(Math.random() * fieldHeight));
-            ship.projectShip(corePosition, this.field);
+            do {
+                corePosition = new Position(Math.floor(Math.random() * fieldWidth), Math.floor(Math.random() * fieldHeight));
+            } while (!ship.projectShip(corePosition, this.field));
             ship.setShip();
-            console.log(ship.getCoords());
         }
     }
 }
