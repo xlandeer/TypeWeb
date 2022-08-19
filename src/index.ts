@@ -30,8 +30,38 @@ namespace Utils {
   }
 }
 
+enum State {
+  setShips,
+  player1Turn,
+  player2Turn,
+  player1Won,
+  player2Won
+}
+
+let gameState = State.setShips;
+
+enum Direction{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
+
 class Position {
   constructor(public posX: number, public posY: number) {}
+
+  public move(direction: Direction): Position {
+    switch (direction) {
+      case Direction.UP:
+        return new Position(this.posX, this.posY - 1);
+      case Direction.DOWN:
+        return new Position(this.posX, this.posY + 1);
+      case Direction.LEFT:
+        return new Position(this.posX - 1, this.posY);
+      case Direction.RIGHT:
+        return new Position(this.posX + 1, this.posY);
+    }
+  }
 }
 
 
@@ -110,7 +140,9 @@ class Ship {
       for (const cellElement of this.coords) {
         this.parent.field[cellElement.posY][cellElement.posX].setAsDestroyed();
       }
+      return true;
     }
+    return false;
   }
 }
 
@@ -148,13 +180,17 @@ class Cell {
     }
   }
 
-  private setHit() {
+  public setHit() {
     if(!this.hit) {
-      this.div.className = this.isShip ? "field-cell-hit-ship" : "field-cell-hit";
       this.hit = true;
-      this.parentShip?.checkHits(this);
-      console.log(this.getPosition());
+      this.div.className = "field-cell-hit";
+      if(this.isShip) {
+        this.div.className = "field-cell-hit-ship";
+        if (this.parentShip?.checkHits(this)) return 1;
+        return 0;
+      }
     }
+    return -1;
   }
 
   static projectShipOnCell(cell: Cell) {
@@ -280,6 +316,61 @@ class BattleField {
   }
 }
 
+class Ai {
+  private positionsHit: Position[] = [];
+  private currentShipTrail: Position = new Position(0, 0);
+  private currentShipTrailActive: boolean = false;
+  private currentShipTrailDirection: number | undefined = undefined;
+  constructor(private enemy: BattleField) {
+
+  }
+
+  public shoot() {
+    if (this.enemy.checkDestroyedShips()) return;
+
+
+    let hitPosition: Position;
+    if(!this.currentShipTrailActive) {
+      hitPosition = new Position(
+          Math.floor(Math.random() * fieldWidth),
+          Math.floor(Math.random() * fieldHeight)
+      );
+      if(this.enemy.field[hitPosition.posX][hitPosition.posY].setHit()) {
+        this.currentShipTrailActive = true;
+        this.currentShipTrail = hitPosition;
+
+        this.shoot();
+      }
+    } else {
+      const direction = this.currentShipTrailDirection !== undefined ? this.currentShipTrailDirection : Math.random() * 4;
+
+      hitPosition = this.currentShipTrail.move(direction);
+      const hitValue = this.enemy.field[hitPosition.posX][hitPosition.posY].setHit();
+      // -1 = no hit
+      // 0 = just a hit
+      // 1 = ship destroyed
+      switch(hitValue) {
+        case -1:
+            this.currentShipTrailDirection = this.currentShipTrailDirection !== Direction.RIGHT && this.currentShipTrailDirection ? this.currentShipTrailDirection + 1 : Direction.UP;
+            break;
+        case 0:
+          this.currentShipTrail = hitPosition;
+          this.currentShipTrailDirection = direction;
+          this.shoot();
+          break;
+        case 1:
+          this.currentShipTrailActive = false;
+          this.currentShipTrailDirection = undefined;
+          this.shoot();
+          break;
+      }
+
+    }
+
+
+  }
+}
+
 
 const parentDOMElement = document.querySelector(".battle-field-wrapper");
 
@@ -299,9 +390,12 @@ let activeShip: Ship | undefined = availableShips.pop();
 document
   .querySelector(".input-wrapper .start-btn")
   ?.addEventListener("click", () => {
+    gameState = State.player1Turn;
     ownField.set = true;
     enemyField.draw();
     enemyField.set = true;
   });
-
-
+/*
+while(gameState === State.player1Turn || gameState === State.player2Turn) {
+  // TODO: Implement Game LOOP System
+}*/

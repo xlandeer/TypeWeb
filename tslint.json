@@ -8,6 +8,7 @@
     "trailing-comma": false,
     "max-classes-per-file": false,
     "no-namespace": false,
-    "no-console": false
+    "no-console": false,
+    "no-trailing-whitespace": false
   }
 }
