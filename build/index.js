@@ -53,6 +53,7 @@ class Ship {
         this.core = new Position(0, 0);
         this.coords = [];
         this.coordsHit = [];
+        this.isDestroyed = false;
         this.coreOffsets = coreOffsets;
     }
     // TODO: rework method
@@ -71,18 +72,11 @@ class Ship {
         this.clearCoords(field);
         if (!this.isSet && this.isShipInBounds(corePosition)) {
             this.core = corePosition;
-            field[corePosition.posX][corePosition.posY].asShip(this);
+            field[corePosition.posY][corePosition.posX].asShip(this);
             this.coords.push(corePosition);
             for (const offset of this.coreOffsets) {
-                // if (
-                //   corePosition.posX + offset[0] <= fieldWidth - 1 &&
-                //   corePosition.posY + offset[1] <= fieldHeight - 1 &&
-                //   corePosition.posX + offset[0] >= 0 &&
-                //   corePosition.posY + offset[1] >= 0
-                // ) {
-                field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip(this);
+                field[corePosition.posY + offset[1]][corePosition.posX + offset[0]].asShip(this);
                 this.coords.push(new Position(corePosition.posX + offset[0], corePosition.posY + offset[1]));
-                // }
             }
             return true;
         }
@@ -91,7 +85,7 @@ class Ship {
     clearCoords(field) {
         if (this.coords.length) {
             for (const coord of this.coords) {
-                field[coord.posX][coord.posY].asNormal();
+                field[coord.posY][coord.posX].asNormal();
             }
             this.coords = [];
         }
@@ -99,11 +93,21 @@ class Ship {
     setShip() {
         this.isSet = true;
         for (const coord of this.coords) {
-            this.parent.field[coord.posX][coord.posY].setAsShip();
+            this.parent.field[coord.posY][coord.posX].setAsShip();
         }
     }
     getCoords() {
         return this.coords;
+    }
+    checkHits(cell) {
+        this.coordsHit.push(cell.getPosition());
+        if (this.coordsHit.length === this.coords.length) {
+            this.isDestroyed = true;
+            this.parent.checkDestroyedShips();
+            for (const cellElement of this.coords) {
+                this.parent.field[cellElement.posY][cellElement.posX].setAsDestroyed();
+            }
+        }
     }
 }
 class Cell {
@@ -112,8 +116,9 @@ class Cell {
         this.mazeWrapper = mazeWrapper;
         this.parent = parent;
         this.isUsed = isUsed;
-        this.ship = false;
+        this.isShip = false;
         this.parentShip = undefined;
+        this.hit = false;
         this.div = Utils.createElementWithAttributes("div", [
             "class",
             "field-cell",
@@ -132,15 +137,21 @@ class Cell {
         }
         else {
             this.div.addEventListener("click", () => {
-                this.hit();
+                this.setHit();
             });
         }
     }
-    hit() {
-        this.div.className = this.ship ? "field-cell-hit-ship" : "field-cell-hit";
+    setHit() {
+        var _a;
+        if (!this.hit) {
+            this.div.className = this.isShip ? "field-cell-hit-ship" : "field-cell-hit";
+            this.hit = true;
+            (_a = this.parentShip) === null || _a === void 0 ? void 0 : _a.checkHits(this);
+            console.log(this.getPosition());
+        }
     }
     static projectShipOnCell(cell) {
-        if (!cell.ship && activeShip !== undefined) {
+        if (!cell.isShip && activeShip !== undefined) {
             activeShip.projectShip(cell.position, cell.parent.field);
         }
     }
@@ -161,16 +172,16 @@ class Cell {
         this.parentShip = parentShip;
     }
     asNormal() {
-        if (!this.ship) {
+        if (!this.isShip) {
             this.div.className = "field-cell";
         }
         this.parentShip = undefined;
     }
     setAsShip() {
-        this.ship = true;
+        this.isShip = true;
     }
-    isShip() {
-        return this.ship;
+    setAsDestroyed() {
+        this.div.className = "field-cell-destroyed";
     }
 }
 class BattleField {
@@ -180,22 +191,26 @@ class BattleField {
         this.userControlled = userControlled;
         this.field = [];
         this.ships = [];
-        this.shipPositions = [];
         this.set = false;
+        this.allDestroyed = false;
         this.fieldWrapper = Utils.createElementWithAttributes("div", [
             "class",
             userControlled ? "field-wrapper" : "field-wrapper-ai",
         ]);
         this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
         this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
-        for (let x = 0; x < this.width; x++) {
-            this.field[x] = new Array(this.width);
-            for (let y = 0; y < this.height; y++) {
-                this.field[x][y] = new Cell(new Position(x, y), this.fieldWrapper, this, userControlled);
+        for (let y = 0; y < this.height; y++) {
+            this.field[y] = new Array(this.width);
+            for (let x = 0; x < this.width; x++) {
+                this.field[y][x] = new Cell(new Position(x, y), this.fieldWrapper, this, userControlled);
             }
         }
         if (!userControlled) {
-            this.placeShips([new Ship(this, [0, 1], [0, -1])]);
+            this.placeShips([
+                new Ship(this, [0, 1], [0, 2], [0, 3], [0, 4]),
+                new Ship(this, [1, 0], [2, 0], [3, 0], [4, 0]),
+                new Ship(this, [1, 1], [2, 1], [3, 1], [4, 1]),
+            ]);
         }
     }
     draw() {
@@ -206,7 +221,7 @@ class BattleField {
         if (!ship.getCoords().length)
             return false;
         for (const coord of ship.getCoords()) {
-            if (this.field[coord.posX][coord.posY].isShip()) {
+            if (this.field[coord.posX][coord.posY].isShip) {
                 return false;
             }
         }
@@ -222,7 +237,19 @@ class BattleField {
                 corePosition = new Position(Math.floor(Math.random() * fieldWidth), Math.floor(Math.random() * fieldHeight));
             } while (!ship.projectShip(corePosition, this.field));
             ship.setShip();
+            this.addShip(ship);
+            console.log(ship.getCoords());
         }
+    }
+    checkDestroyedShips() {
+        for (const ship of this.ships) {
+            if (!ship.isDestroyed) {
+                return false;
+            }
+        }
+        this.allDestroyed = true;
+        console.log('all ships destroyed');
+        return true;
     }
 }
 const parentDOMElement = document.querySelector(".battle-field-wrapper");
@@ -232,7 +259,7 @@ let ownField = new BattleField(fieldWidth, fieldHeight);
 let enemyField = new BattleField(fieldWidth, fieldHeight, false);
 ownField.draw();
 const availableShips = [
-    new Ship(ownField, [0, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
+    new Ship(ownField, [0, 1], [0, 2], [0, 3], [0, 4]),
 ];
 let activeShip = availableShips.pop();
 (_a = document

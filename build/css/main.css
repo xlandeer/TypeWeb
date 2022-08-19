@@ -44,5 +44,9 @@ body main .battle-field-wrapper .field-wrapper-ai .field-cell-hit-ship {
   border: 1px solid #fff;
   background-color: blue;
 }
+body main .battle-field-wrapper .field-wrapper-ai .field-cell-destroyed {
+  border: 1px solid #fff;
+  background-color: green;
+}
 
 /*# sourceMappingURL=main.css.map */

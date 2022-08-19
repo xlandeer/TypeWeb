@@ -1,4 +1,3 @@
-
 namespace Utils {
   export function appendElements(parent: Element, ...nodes: HTMLElement[]) {
     for (const node of nodes) {
@@ -69,7 +68,7 @@ class Ship {
       field[corePosition.posX][corePosition.posY].asShip(this);
       this.coords.push(corePosition);
       for (const offset of this.coreOffsets) {
-        field[corePosition.posX + offset[0]][corePosition.posY + offset[1]].asShip(this);
+        field[corePosition.posY + offset[1]][corePosition.posX + offset[0]].asShip(this);
         this.coords.push(
           new Position(
             corePosition.posX + offset[0],
@@ -101,11 +100,22 @@ class Ship {
   public getCoords() {
     return this.coords;
   }
+
+  public checkHits(cell: Cell) {
+    this.coordsHit.push(cell.getPosition());
+    if (this.coordsHit.length === this.coords.length) {
+      this.isDestroyed = true;
+      this.parent.checkDestroyedShips();
+      for (const cellElement of this.coords) {
+        this.parent.field[cellElement.posY][cellElement.posX].setAsDestroyed();
+      }
+    }
+  }
 }
 
 class Cell {
   private readonly div: HTMLDivElement;
-  private ship: boolean = false;
+  public isShip: boolean = false;
   private parentShip: Ship | undefined = undefined;
   constructor(
       private position: Position,
@@ -141,7 +151,7 @@ class Cell {
   }
 
   static projectShipOnCell(cell: Cell) {
-    if (!cell.ship && activeShip !== undefined) {
+    if (!cell.isShip && activeShip !== undefined) {
       activeShip.projectShip(cell.position, cell.parent.field);
     }
   }
@@ -166,18 +176,18 @@ class Cell {
   }
 
   public asNormal() {
-    if (!this.ship) {
+    if (!this.isShip) {
       this.div.className = "field-cell";
     }
     this.parentShip = undefined;
   }
 
   public setAsShip() {
-    this.ship = true;
+    this.isShip = true;
   }
 
-  public isShip() {
-    return this.ship;
+  public setAsDestroyed() {
+    this.div.className = "field-cell-destroyed";
   }
 }
 
@@ -185,9 +195,8 @@ class BattleField {
   fieldWrapper: HTMLDivElement;
   field: Cell[][] = [];
   private ships: Ship[] = [];
-  shipPositions: Position[] = [];
   set: boolean = false;
-
+  private allDestroyed: boolean = false;
   constructor(private width: number, private height: number, private userControlled: boolean = true) {
     this.fieldWrapper = Utils.createElementWithAttributes("div", [
       "class",
@@ -196,10 +205,10 @@ class BattleField {
     this.fieldWrapper.style.gridTemplateColumns = `repeat(${this.width}, 30px)`;
     this.fieldWrapper.style.gridTemplateRows = `repeat(${this.height}, 30px)`;
 
-    for (let x: number = 0; x < this.width; x++) {
-      this.field[x] = new Array(this.width);
-      for (let y: number = 0; y < this.height; y++) {
-        this.field[x][y] = new Cell(
+    for (let y: number = 0;y < this.height; y++) {
+      this.field[y] = new Array(this.width);
+      for (let x: number = 0; x < this.width; x++) {
+        this.field[y][x] = new Cell(
             new Position(x, y),
             this.fieldWrapper,
             this,
@@ -222,7 +231,7 @@ class BattleField {
     if (!ship.getCoords().length) return false;
 
     for (const coord of ship.getCoords()) {
-      if (this.field[coord.posX][coord.posY].isShip()) {
+      if (this.field[coord.posX][coord.posY].isShip) {
         return false;
       }
     }
@@ -243,9 +252,23 @@ class BattleField {
         );
       } while(!ship.projectShip(corePosition, this.field));
       ship.setShip();
+      this.addShip(ship);
+      console.log(ship.getCoords());
     }
   }
+
+  public checkDestroyedShips() {
+    for (const ship of this.ships) {
+      if(!ship.isDestroyed) {
+        return false;
+      }
+    }
+    this.allDestroyed = true;
+    console.log('all ships destroyed');
+    return true;
+  }
 }
+
 
 const parentDOMElement = document.querySelector(".battle-field-wrapper");
 
@@ -258,7 +281,7 @@ let enemyField: BattleField = new BattleField(fieldWidth, fieldHeight, false);
 ownField.draw();
 
 const availableShips: Ship[] = [
-  new Ship( ownField,[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]),
+  new Ship( ownField,[0, 1], [0, 2], [0, 3], [0, 4]),
 ];
 let activeShip: Ship | undefined = availableShips.pop();
 
