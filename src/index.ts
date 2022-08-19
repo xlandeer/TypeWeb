@@ -40,7 +40,8 @@ class Ship {
   private isSet: boolean = false;
   private core: Position = new Position(0, 0);
   private coords: Position[] = [];
-  private coordsHit: boolean[] = [];
+  private coordsHit: Position[] = [];
+  public isDestroyed: boolean = false;
   private readonly coreOffsets: [number, number][];
   constructor(private parent: BattleField, ...coreOffsets: [number, number][]) {
     this.coreOffsets = coreOffsets;
