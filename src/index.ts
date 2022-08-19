@@ -117,6 +117,7 @@ class Cell {
   private readonly div: HTMLDivElement;
   public isShip: boolean = false;
   private parentShip: Ship | undefined = undefined;
+  private hit: boolean = false;
   constructor(
       private position: Position,
       private mazeWrapper: HTMLDivElement,
@@ -141,13 +142,18 @@ class Cell {
       } );
     } else {
       this.div.addEventListener("click", () => {
-        this.hit();
+        this.setHit();
       } );
     }
   }
 
-  private hit() {
-    this.div.className = this.ship ? "field-cell-hit-ship" : "field-cell-hit";
+  private setHit() {
+    if(!this.hit) {
+      this.div.className = this.isShip ? "field-cell-hit-ship" : "field-cell-hit";
+      this.hit = true;
+      this.parentShip?.checkHits(this);
+      console.log(this.getPosition());
+    }
   }
 
   static projectShipOnCell(cell: Cell) {
@@ -218,7 +224,11 @@ class BattleField {
     }
 
     if (!userControlled) {
-      this.placeShips([new Ship( this,[0, 1], [0, -1] )]);
+      this.placeShips([
+            new Ship( this,[0, 1], [0, 2], [0, 3], [0, 4] ),
+            new Ship( this,[1, 0], [2, 0], [3, 0], [4, 0] ),
+            new Ship( this,[1, 1], [2, 1], [3, 1], [4, 1] ),
+      ]);
     }
   }
 
